@@ -1,7 +1,14 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import Actions from '$lib/components/actions.svelte';
 	import Particles from '$lib/components/particles.svelte';
 	import Stats from '$lib/components/stats.svelte';
+	import gameClient from '$lib/game/client';
+
+	onMount(() => {
+		gameClient.join('my_room');
+	});
 </script>
 
 <main

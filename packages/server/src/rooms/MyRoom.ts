@@ -1,29 +1,35 @@
-import { Room, Client } from "@colyseus/core";
+import { Room, Client, matchMaker } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState";
 
 export class MyRoom extends Room<MyRoomState> {
-  maxClients = 4;
+  maxClients = 10;
 
-  onCreate (options: any) {
+  onCreate(options: any) {
     this.setState(new MyRoomState());
 
-    this.onMessage("type", (client, message) => {
-      //
-      // handle "type" message
-      //
-    });
+    //this.onMessage("stats", async (client, message) => {});
   }
 
-  onJoin (client: Client, options: any) {
+  onJoin(client: Client, options: any) {
     console.log(client.sessionId, "joined!");
+
+    const sendConnectedStats = async () => {
+      const stats = await matchMaker.stats.getGlobalCCU();
+
+      if (stats !== undefined && stats !== null) {
+        // doesn't include the client that sent the message, so we add +1
+        client.send("world:stats", stats + 1);
+      }
+    };
+
+    sendConnectedStats();
   }
 
-  onLeave (client: Client, consented: boolean) {
+  onLeave(client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
   }
 
   onDispose() {
     console.log("room", this.roomId, "disposing...");
   }
-
 }
