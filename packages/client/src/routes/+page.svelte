@@ -12,12 +12,10 @@
 </script>
 
 <main
-	class="relative min-h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-black"
+	class="from-primary/50 to-secondary/10 via-secondary/10 relative min-h-screen overflow-hidden bg-gradient-to-br"
 >
 	<Particles />
-	<div
-		class="relative z-10 grid h-full min-h-screen grid-cols-1 items-center justify-between gap-10 px-6"
-	>
+	<div class="flex h-full min-h-screen w-full flex-col justify-between gap-2 px-6 py-4">
 		<Actions />
 		<Stats />
 	</div>

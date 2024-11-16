@@ -2,14 +2,15 @@
 	let hoveredButton = $state(false);
 </script>
 
-<section class="flex h-[300px] flex-col items-center justify-center md:h-[260px]">
-	<div class="mb-8 transform text-center transition-transform hover:scale-105">
+<section class="flex flex-1 flex-col items-center justify-center py-12">
+	<span class="mb-8 flex flex-col items-center gap-8 md:flex-row">
 		<h1
-			class="title-gradient font-pixel pointer-events-none bg-clip-text text-8xl font-extrabold uppercase text-transparent"
+			class="animated-title font-pixel transform cursor-default select-none bg-clip-text text-center text-8xl font-extrabold uppercase text-transparent transition-transform hover:scale-105"
 		>
 			ape arena
 		</h1>
-	</div>
+		<p class="animate-bounce cursor-default text-7xl text-neutral-300 md:-mr-12">🍌</p>
+	</span>
 
 	<a href="/play">
 		<button
@@ -19,16 +20,34 @@
          text-white transition-all duration-300
          hover:scale-105 hover:text-white hover:shadow-2xl"
 		>
-			ENTER THE ARENA
 			{#if hoveredButton}
+				<span class="text-2xl">🍌🍌🍌🍌🍌</span>
 				<div class="absolute inset-0 animate-pulse rounded-xl bg-white opacity-20"></div>
+			{:else}
+				ENTER THE ARENA
 			{/if}
 		</button>
 	</a>
 </section>
 
 <style lang="postcss">
-	.title-gradient {
-		@apply from-warning via-secondary to-secondary bg-gradient-to-r;
+	.animated-title {
+		background-image: linear-gradient(
+			-60deg,
+			theme(colors.primary) 0%,
+			theme(colors.primary) 20%,
+			theme(colors.secondary) 40%,
+			theme(colors.secondary) 60%,
+			theme(colors.primary) 80%,
+			theme(colors.primary) 100%
+		);
+		background-size: 300% auto;
+		animation: shine 4s linear infinite;
+	}
+
+	@keyframes shine {
+		to {
+			background-position: 300% center;
+		}
 	}
 </style>

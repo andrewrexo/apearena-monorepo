@@ -37,7 +37,7 @@
 
 <div class="flex h-full w-full flex-col">
 	<div
-		class="h-[290px] space-y-2 overflow-y-auto rounded-lg bg-black bg-opacity-30 p-4"
+		class="border-tl-lg border-tr-lg h-[290px] space-y-2 overflow-y-auto rounded-t-lg bg-black bg-opacity-30 p-4"
 		bind:this={chatContainer}
 	>
 		{#each messages as message (message.id)}
@@ -57,15 +57,19 @@
 		{/each}
 	</div>
 
-	<form class="mt-2 flex w-full gap-1" onsubmit={sendMessage}>
-		<input
-			type="text"
-			bind:value={chatInput}
-			placeholder="Type a message..."
-			class=" input input-md bg-primary min-w-0 flex-1 rounded-lg bg-opacity-20 px-2 text-sm text-neutral-300"
-		/>
-		<button type="submit" class=" btn btn-md bg-primary bg-opacity-50 font-bold text-white">
-			Send
-		</button>
+	<form class="mt-0 flex w-full gap-1" onsubmit={sendMessage}>
+		<label
+			for="chat-input"
+			class="input input-lg input-primary flex flex-1 items-center rounded-none rounded-b-lg border-none bg-black bg-opacity-40 px-4 text-sm text-neutral-300 outline-none placeholder:text-neutral-300"
+		>
+			<input
+				class="w-full shadow-lg"
+				id="chat-input"
+				type="text"
+				bind:value={chatInput}
+				placeholder="Type a message..."
+			/>
+			<button type="submit" class="btn btn-md btn-ghost hover:bg-primary/80">Send</button>
+		</label>
 	</form>
 </div>
