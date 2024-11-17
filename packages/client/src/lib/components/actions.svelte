@@ -24,7 +24,7 @@
 		<span class="font-sans text-sm capitalize">SLOTS, BATTLES and $BANANA</span>
 	</span>
 	<div
-		class="md:btn-wide flex w-full flex-col-reverse items-center justify-center rounded-2xl bg-opacity-30 p-2 py-8 pb-6 md:mb-8 md:mt-4 md:bg-transparent md:py-2"
+		class="md:btn-wide z-10 flex w-full flex-col-reverse items-center justify-center rounded-2xl bg-opacity-30 p-2 py-8 pb-6 md:mb-8 md:mt-4 md:bg-transparent md:py-2"
 	>
 		<div class="font-pixel flex min-h-24 w-full items-center justify-between gap-2 pt-8">
 			{#if mounted}
@@ -39,8 +39,8 @@
 			{/if}
 		</div>
 		<button
-			onmouseenter={() => (hoveredButton = true)}
-			onmouseleave={() => (hoveredButton = false)}
+			onpointerenter={() => (hoveredButton = true)}
+			onpointerleave={() => (hoveredButton = false)}
 			class="btn-lg btn-block from-primary to-secondary group relative flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r font-bold
          text-white transition-all duration-300
          hover:scale-105 hover:text-white hover:shadow-2xl"

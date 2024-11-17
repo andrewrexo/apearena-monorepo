@@ -19,6 +19,6 @@
 		font-size: 2rem;
 		width: 2rem;
 		height: 2rem;
-		@apply transition-all hover:scale-105 hover:shadow-lg;
+		@apply transition-all hover:scale-125 hover:shadow-lg;
 	}
 </style>
