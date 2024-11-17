@@ -62,7 +62,7 @@
 	<form class="mt-0 flex w-full gap-1" onsubmit={sendMessage}>
 		<label
 			for="chat-input"
-			class="input input-md input-primary bg-base-300 flex flex-1 items-center rounded-b-lg border-none bg-opacity-40 px-4 text-sm text-neutral-300 !outline-none ring-transparent focus:ring-0"
+			class="input input-md input-primary bg-base-300 flex flex-1 items-center rounded-b-lg rounded-t-none border-none bg-opacity-40 px-4 text-sm text-neutral-300 !outline-none ring-transparent focus:ring-0"
 		>
 			<input
 				class="placeholder:text-base-content w-full"
