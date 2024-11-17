@@ -42,7 +42,7 @@
 			onpointerenter={() => (hoveredButton = true)}
 			onpointerleave={() => (hoveredButton = false)}
 			class="btn-block from-primary to-secondary group relative flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-4 font-bold
-         text-white shadow-md transition-all
+         text-neutral-100 shadow-md transition-all
          duration-300 hover:scale-105 hover:text-white hover:shadow-2xl"
 		>
 			{#if hoveredButton}

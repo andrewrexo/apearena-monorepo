@@ -1,10 +1,14 @@
-import { statsState } from '$lib/state/stats.svelte';
 import * as Colyseus from 'colyseus.js';
+
+import globalChatState from '$lib/state/chat.svelte';
+import { statsState } from '$lib/state/stats.svelte';
+
+import type { Message as ServerMessage } from '$server/rooms/schema/chat-room-state';
 
 class GameClient {
 	#colyseus: Colyseus.Client | null = null;
-	#room: Colyseus.Room | null = null;
 
+	room: Colyseus.Room | null = null;
 	host: string = 'ws://localhost:2567';
 
 	constructor() {
@@ -16,12 +20,20 @@ class GameClient {
 	}
 
 	setupHandlers() {
-		if (!this.#room) {
+		if (!this.room) {
 			throw new Error('Room not joined');
 		}
 
-		this.#room.onMessage('world:stats', (message) => {
+		this.room.onMessage('world:stats', (message) => {
 			statsState.updateConnectionCount(message);
+		});
+
+		this.room.onMessage('system', (message: ServerMessage) => {
+			globalChatState.addMessage(message);
+		});
+
+		this.room.state.messages.onAdd((message: ServerMessage) => {
+			globalChatState.addMessage(message);
 		});
 	}
 
@@ -34,7 +46,7 @@ class GameClient {
 			.joinOrCreate(room)
 			.then((room) => {
 				console.log('joined room: ', room);
-				this.#room = room;
+				this.room = room;
 				this.setupHandlers();
 			})
 			.catch((err) => {

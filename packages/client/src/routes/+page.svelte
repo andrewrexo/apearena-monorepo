@@ -5,11 +5,13 @@
 	import Particles from '$lib/components/particles.svelte';
 	import Stats from '$lib/components/stats.svelte';
 	import Marquee from '$lib/components/marquee.svelte';
-	import gameClient from '$lib/game/client';
 	import ThemeControl from '$lib/components/theme-control.svelte';
 
+	import gameClient from '$lib/game/client';
+	import { defaultRoom } from '$lib/game/config';
+
 	onMount(() => {
-		gameClient.join('my_room');
+		gameClient.join(defaultRoom);
 	});
 </script>
 
