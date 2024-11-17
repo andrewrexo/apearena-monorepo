@@ -4,6 +4,7 @@
 	import Actions from '$lib/components/actions.svelte';
 	import Particles from '$lib/components/particles.svelte';
 	import Stats from '$lib/components/stats.svelte';
+	import Marquee from '$lib/components/marquee.svelte';
 	import gameClient from '$lib/game/client';
 
 	onMount(() => {
@@ -16,6 +17,7 @@
 >
 	<Particles />
 	<div class="flex h-full min-h-screen w-full flex-col justify-between gap-2 px-6 py-4">
+		<Marquee />
 		<Actions />
 		<Stats />
 	</div>

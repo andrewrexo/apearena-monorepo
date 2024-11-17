@@ -1,31 +1,47 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import Socials from './socials.svelte';
+	import { fade, fly } from 'svelte/transition';
 
+	let mounted = $state(false);
 	let hoveredButton = $state(false);
 	let shouldBounce = $state(true);
 
 	onMount(() => {
+		mounted = true;
 		setTimeout(() => {
 			shouldBounce = false;
 		}, 1500);
 	});
 </script>
 
-<section class="flex flex-1 flex-col items-center justify-center py-12">
-	<span class="mb-8 flex flex-col items-center gap-4 md:flex-row">
-		<h1
-			class="animated-title font-pixel transform cursor-default select-none bg-clip-text text-center text-6xl font-extrabold uppercase text-transparent transition-transform hover:scale-105"
-			class:bounce-twice={shouldBounce}
-		>
-			ape arena
-		</h1>
+<section class="flex flex-col items-center pt-8">
+	<span
+		class:bounce-twice={shouldBounce}
+		class="animated-title font-pixel flex transform cursor-default select-none flex-col bg-clip-text text-center text-6xl font-extrabold uppercase text-transparent transition-transform hover:scale-105 md:pb-2"
+	>
+		ape arena
+		<span class="font-sans text-sm capitalize">SLOTS, BATTLES and $BANANA</span>
 	</span>
+	<div
+		class="md:btn-wide flex w-full flex-col-reverse items-center justify-center rounded-2xl bg-opacity-30 p-2 py-8 pb-6 md:mb-8 md:mt-4 md:bg-transparent md:py-2"
+	>
+		<div class="font-pixel flex min-h-24 w-full items-center justify-between gap-2 pt-8">
+			{#if mounted}
+				<span class="text-sm" in:fly={{ y: 10, duration: 500 }}>
+					join the <span class="animated-title flex bg-clip-text text-transparent">🍌 $BANANA</span>
+					gang
+				</span>
 
-	<a href="/play">
+				<div in:fly={{ y: 10 }}>
+					<Socials />
+				</div>
+			{/if}
+		</div>
 		<button
 			onmouseenter={() => (hoveredButton = true)}
 			onmouseleave={() => (hoveredButton = false)}
-			class="btn-lg btn-wide from-primary to-secondary group relative flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r font-bold
+			class="btn-lg btn-block from-primary to-secondary group relative flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r font-bold
          text-white transition-all duration-300
          hover:scale-105 hover:text-white hover:shadow-2xl"
 		>
@@ -36,7 +52,7 @@
 				ENTER THE ARENA
 			{/if}
 		</button>
-	</a>
+	</div>
 </section>
 
 <style lang="postcss">
