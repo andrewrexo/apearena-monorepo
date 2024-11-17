@@ -25,5 +25,8 @@ export default {
 		}
 	},
 
-	plugins: [daisyui]
+	plugins: [daisyui],
+	daisyui: {
+		themes: ['night', 'dark', 'dracula', 'sunset', 'dim']
+	}
 } satisfies Config;

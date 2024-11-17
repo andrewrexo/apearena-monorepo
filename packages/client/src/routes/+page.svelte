@@ -6,6 +6,7 @@
 	import Stats from '$lib/components/stats.svelte';
 	import Marquee from '$lib/components/marquee.svelte';
 	import gameClient from '$lib/game/client';
+	import ThemeControl from '$lib/components/theme-control.svelte';
 
 	onMount(() => {
 		gameClient.join('my_room');
@@ -17,7 +18,10 @@
 >
 	<Particles />
 	<div class="flex h-full min-h-screen w-full flex-col justify-between gap-2 px-6 py-4">
-		<Marquee />
+		<div class="flex flex-col gap-2">
+			<Marquee />
+			<ThemeControl />
+		</div>
 		<Actions />
 		<Stats />
 	</div>

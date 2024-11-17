@@ -38,15 +38,15 @@
 	}
 </script>
 
-<div class="rounded-xl bg-black/40 px-2 py-2">
+<div class="btn btn-sm m-1 border-none bg-opacity-50 px-2 py-2">
 	<div class="relative h-4 overflow-hidden rounded-xl">
 		<div class="marquee-container">
 			<div class="marquee-content">
 				{#each news as item}
 					<span
 						class="mx-4 text-xs font-medium"
-						class:text-yellow-400={item.type === 'win'}
-						class:text-blue-400={item.type === 'news'}
+						class:text-success={item.type === 'win'}
+						class:text-primary={item.type === 'news'}
 					>
 						{item.message}
 					</span>
@@ -56,8 +56,8 @@
 				{#each news as item}
 					<span
 						class="mx-4 text-xs font-medium"
-						class:text-yellow-400={item.type === 'win'}
-						class:text-blue-400={item.type === 'news'}
+						class:text-success={item.type === 'win'}
+						class:text-primary={item.type === 'news'}
 					>
 						{item.message}
 					</span>

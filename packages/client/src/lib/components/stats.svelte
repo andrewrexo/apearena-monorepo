@@ -12,7 +12,7 @@
 	class="grid grid-cols-1 gap-4 rounded-xl bg-opacity-40 backdrop-blur-sm md:grid-cols-[240px_1fr] md:px-0"
 >
 	<div
-		class="order-2 flex flex-col-reverse justify-between rounded-lg bg-black bg-opacity-30 md:order-1"
+		class="bg-base-300 order-2 flex flex-col-reverse justify-between rounded-lg bg-opacity-30 md:order-1"
 	>
 		<div class="stat">
 			<div class="stat-title">Connected players</div>
