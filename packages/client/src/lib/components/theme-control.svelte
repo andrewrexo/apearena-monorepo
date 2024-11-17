@@ -10,7 +10,24 @@
 	let isOpen = $state(false);
 	let mounted = $state(false);
 
-	function toggleDropdown() {
+	function clickOutside(node: HTMLElement) {
+		const handleClick = (event: MouseEvent) => {
+			if (!node.contains(event.target as Node)) {
+				isOpen = false;
+			}
+		};
+
+		document.addEventListener('click', handleClick, true);
+
+		return {
+			destroy() {
+				document.removeEventListener('click', handleClick, true);
+			}
+		};
+	}
+
+	function toggleDropdown(event: MouseEvent) {
+		event.stopPropagation();
 		isOpen = !isOpen;
 	}
 
@@ -32,10 +49,9 @@
 	});
 </script>
 
-<div class="dropdown dropdown-end z-20 min-h-10 self-end pt-2">
+<div class="dropdown dropdown-end z-20 min-h-10 self-end pt-2" use:clickOutside>
 	{#if mounted}
 		<button
-			tabindex="0"
 			class="btn btn-sm mr-1 flex items-center gap-2 border-none bg-opacity-50"
 			onclick={toggleDropdown}
 			in:fade={{ duration: 300 }}
