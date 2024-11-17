@@ -1,8 +1,6 @@
 {
   "name": "apearena",
   "private": "true",
-  "module": "index.ts",
-  "type": "module",
   "workspaces": [
     "packages/server",
     "packages/client"
