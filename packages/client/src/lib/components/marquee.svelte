@@ -8,13 +8,9 @@
 		{ type: 'win', message: '0x00.. won 1000 coins!' },
 		{ type: 'news', message: 'Welcome to the game, 0x00!' },
 		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'news', message: 'News update 1' },
 		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'news', message: 'News update 2' },
 		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'news', message: 'News update 3' },
-		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'news', message: 'News update 4' }
+		{ type: 'win', message: '0x00.. won 500 coins!' }
 	]);
 
 	function addWin(player: string, amount: number) {
@@ -38,15 +34,15 @@
 	}
 </script>
 
-<div class="btn btn-sm m-1 border-none bg-opacity-50 px-2 py-2">
-	<div class="relative h-4 overflow-hidden rounded-xl">
+<div class="btn btn-sm bg-base-300 min-h-5 border-none bg-opacity-50 px-2 py-2">
+	<div class="relative h-8 overflow-hidden rounded-xl">
 		<div class="marquee-container">
 			<div class="marquee-content">
 				{#each news as item}
 					<span
-						class="mx-4 text-xs font-medium"
-						class:text-success={item.type === 'win'}
-						class:text-primary={item.type === 'news'}
+						class="mx-4 text-xs font-bold"
+						class:text-primary={item.type === 'win'}
+						class:text-secondary={item.type === 'news'}
 					>
 						{item.message}
 					</span>
@@ -55,7 +51,7 @@
 			<div class="marquee-content" aria-hidden="true">
 				{#each news as item}
 					<span
-						class="mx-4 text-xs font-medium"
+						class="mx-4 text-xs font-bold"
 						class:text-success={item.type === 'win'}
 						class:text-primary={item.type === 'news'}
 					>

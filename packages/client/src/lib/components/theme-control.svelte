@@ -2,7 +2,7 @@
 	import { themeIconRecord, displayThemeNames } from '$lib/theme';
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
 	let themeList = $state(['night', 'dark', 'dracula', 'sunset', 'dim']);
 	let currentTheme = $state('dracula');
@@ -34,10 +34,15 @@
 
 <div class="dropdown dropdown-end z-20 min-h-10 self-end pt-2">
 	{#if mounted}
-		<button tabindex="0" class="btn btn-sm mr-1 border-none bg-opacity-50" onclick={toggleDropdown}>
+		<button
+			tabindex="0"
+			class="btn btn-sm mr-1 flex items-center gap-2 border-none bg-opacity-50"
+			onclick={toggleDropdown}
+			in:fade={{ duration: 300 }}
+		>
 			theme
-			<span class="min-h-4 min-w-4" transition:fly={{ y: -10 }}>
-				<Icon icon="mdi:palette-outline" width="1rem" />
+			<span class="min-h-3 min-w-3" transition:fly={{ y: -10 }}>
+				<Icon icon="material-symbols:palette" />
 			</span>
 		</button>
 	{/if}
