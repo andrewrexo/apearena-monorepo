@@ -50,7 +50,7 @@
 				<div class="absolute inset-0 animate-pulse rounded-xl bg-white opacity-20"></div>
 			{:else}
 				ENTER THE ARENA
-				<span class="h-8 w-8 text-2xl"> 🍌 </span>
+				<span class="-mr-5 h-8 w-8 text-2xl"> 🍌 </span>
 			{/if}
 		</button>
 	</div>
