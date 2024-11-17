@@ -8,6 +8,13 @@
 	let last7DaysWagered = $state(17259);
 </script>
 
+{#snippet notConnectedStats()}
+	<div
+		transition:fade|local={{ duration: 150 }}
+		class="bg-base-300/20 absolute mt-[2px] h-6 w-[100px] animate-pulse rounded"
+	></div>
+{/snippet}
+
 <div
 	class="grid grid-cols-1 gap-4 rounded-xl bg-opacity-40 backdrop-blur-sm md:grid-cols-[240px_1fr] md:px-0"
 >
@@ -22,6 +29,8 @@
 						<span class="badge badge-xs bg-success/70 mb-1 rounded-full"></span>
 						{statsState.connected}
 					</div>
+				{:else}
+					{@render notConnectedStats()}
 				{/if}
 			</div>
 			<div class="stat-desc">
@@ -36,6 +45,8 @@
 					<div transition:fade|local={{ duration: 150 }}>
 						{formatCurrency(totalWagered)}
 					</div>
+				{:else}
+					{@render notConnectedStats()}
 				{/if}
 			</div>
 			<div class="stat-desc">
@@ -50,6 +61,8 @@
 					<div transition:fade|local={{ duration: 150 }}>
 						{winRate.toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 1 })}
 					</div>
+				{:else}
+					{@render notConnectedStats()}
 				{/if}
 			</div>
 			<div class="stat-desc">↘︎ 0.12% since last 7 days</div>
