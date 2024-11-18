@@ -4,14 +4,16 @@ import globalChatState from '$lib/state/chat.svelte';
 import { statsState } from '$lib/state/stats.svelte';
 
 import type { Message as ServerMessage } from '$server/rooms/schema/chat-room-state';
+import { serverUrl } from './config';
 
 class GameClient {
+	room: Colyseus.Room | null = null;
+	host: string = '';
+
 	#colyseus: Colyseus.Client | null = null;
 
-	room: Colyseus.Room | null = null;
-	host: string = 'ws://localhost:2567';
-
 	constructor() {
+		this.host = serverUrl;
 		this.connect();
 	}
 
