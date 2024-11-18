@@ -18,7 +18,6 @@
 <main
 	class="from-primary/50 to-secondary/10 via-secondary/10 relative min-h-screen overflow-hidden bg-gradient-to-br"
 >
-	<Particles />
 	<div class="flex h-full min-h-screen w-full flex-col justify-between gap-2 px-6 py-4">
 		<div class="flex flex-col gap-2">
 			<Marquee />

@@ -49,7 +49,7 @@
 	});
 </script>
 
-<div class="dropdown dropdown-end z-20 min-h-10 self-end pt-2" use:clickOutside>
+<div class="dropdown dropdown-end z-[100000000] min-h-10 self-end pt-2" use:clickOutside>
 	{#if mounted}
 		<button
 			class="btn btn-sm mr-1 flex items-center gap-2 border-none bg-opacity-50"
