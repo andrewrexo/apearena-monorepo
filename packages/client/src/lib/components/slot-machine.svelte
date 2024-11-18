@@ -1,13 +1,27 @@
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
-	import { fade } from 'svelte/transition';
 	import SlotMachineScene from './slot-machine-scene.svelte';
 
 	let spinning = $state(false);
 	let reels = $state([
-		{ symbols: ['🍌', '💎', '🚀', '🎰', '🎲'], position: 0, speed: 0, targetPosition: 0 },
-		{ symbols: ['💎', '🚀', '🍌', '🎲', '🎰'], position: 0, speed: 0, targetPosition: 0 },
-		{ symbols: ['🚀', '🎰', '💎', '🍌', '🎲'], position: 0, speed: 0, targetPosition: 0 }
+		{
+			symbols: ['🍌', '💎', '🔥', '🎰', '🎲', '🍎', '🍇', '🚀'],
+			position: 0,
+			speed: 0,
+			targetPosition: 0
+		},
+		{
+			symbols: ['💎', '🚀', '🍌', '🍇', '🍉', '🎲', '🎰', '🔥'],
+			position: 0,
+			speed: 0,
+			targetPosition: 0
+		},
+		{
+			symbols: ['🚀', '🎰', '💎', '🍇', '🎲', '🍉', '🔥', '🍌'],
+			position: 0,
+			speed: 0,
+			targetPosition: 0
+		}
 	]);
 
 	let winAmount = $state(0);
@@ -16,8 +30,8 @@
 	let showParticles = $state(false);
 
 	const SPIN_SPEED = 5;
-	const BASE_SPINS = 1;
-	const REEL_DELAY = 200;
+	const BASE_SPINS = 2;
+	const REEL_DELAY = 100;
 	const STOP_DURATION = 5000;
 
 	let pullArm: () => void = $state(() => {});
@@ -88,31 +102,19 @@
 	}
 </script>
 
-<div class="relative flex h-[400px] w-full items-center justify-center">
+<div class="relative flex h-[350px] w-full flex-col items-center justify-center">
 	<Canvas>
 		<SlotMachineScene {reels} spinning={true} {showParticles} bind:pullArm />
-		<ambientLight intensity={0.8} />
-		<pointLight position={[0, 5, 5]} intensity={1} distance={20} color="#ff9900" />
-		<pointLight position={[-5, 0, 5]} intensity={0.5} distance={15} color="#ff0000" />
 	</Canvas>
-
-	<div class="absolute bottom-8 flex w-full flex-col items-center gap-4 md:max-w-[300px]">
-		<button
-			onclick={handleSpin}
-			disabled={spinning || balance < betAmount}
-			class="btn-block from-primary to-secondary flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-4 font-bold
-         text-neutral-100 shadow-md transition-all
-         duration-300 hover:text-white hover:shadow-2xl active:scale-105 active:shadow-2xl"
-			class:btn-disabled={spinning || balance < betAmount}
-			class:bg-opacity-50={spinning || balance < betAmount}
-		>
-			{spinning ? 'Spinning...' : 'PULL ARM'}
-		</button>
-	</div>
 </div>
 
-<style>
-	canvas {
-		image-rendering: pixelated;
-	}
-</style>
+<button
+	onclick={handleSpin}
+	disabled={spinning || balance < betAmount}
+	class="btn-block md:btn-wide from-primary to-secondary mx-auto -mt-4 mb-4 rounded-xl bg-gradient-to-r py-4 font-bold text-neutral-100 shadow-md
+   transition-all hover:text-white hover:shadow-2xl active:scale-105 active:shadow-2xl md:-mt-10"
+	class:btn-disabled={spinning || balance < betAmount}
+	class:bg-opacity-50={spinning || balance < betAmount}
+>
+	{spinning ? 'Spinning...' : 'PULL ARM'}
+</button>

@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 
 	import Actions from '$lib/components/actions.svelte';
-	import Particles from '$lib/components/particles.svelte';
 	import Stats from '$lib/components/stats.svelte';
 	import Marquee from '$lib/components/marquee.svelte';
 	import ThemeControl from '$lib/components/theme-control.svelte';

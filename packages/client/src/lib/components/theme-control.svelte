@@ -3,10 +3,9 @@
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import theme from '$lib/state/theme.svelte';
 
 	let themeList = $state(['night', 'dark', 'dracula', 'sunset', 'dim']);
-	let currentTheme = $state('dracula');
-
 	let isOpen = $state(false);
 	let mounted = $state(false);
 
@@ -37,13 +36,15 @@
 
 		document.body.setAttribute('data-theme', newTheme);
 		localStorage.setItem('theme', newTheme);
-		currentTheme = newTheme;
+		theme.currentTheme = newTheme;
+		theme.updateThemeColors();
 	}
 
 	onMount(() => {
 		const savedTheme = localStorage.getItem('theme');
 		if (savedTheme && themeList.includes(savedTheme)) {
-			currentTheme = savedTheme;
+			theme.currentTheme = savedTheme;
+			theme.updateThemeColors();
 		}
 		mounted = true;
 	});
@@ -66,21 +67,22 @@
 		class="dropdown-content bg-base-300 rounded-box mt-4 w-52 space-y-2 p-2 shadow-2xl"
 		class:hidden={!isOpen}
 	>
-		{#each Object.keys(themeIconRecord) as theme}
+		{#each Object.keys(themeIconRecord) as themeOption}
 			<li>
 				<div class="flex items-center justify-between gap-2">
 					<input
 						type="radio"
 						name="theme-dropdown"
 						class="theme-controller btn btn-sm btn-ghost flex-1 justify-start lowercase"
-						aria-label={displayThemeNames[theme]}
-						value={theme}
-						checked={currentTheme === theme}
+						aria-label={displayThemeNames[themeOption]}
+						value={themeOption}
+						checked={theme.currentTheme === themeOption}
 						onchange={handleThemeChange}
 					/>
 					<Icon
-						icon={themeIconRecord[theme]}
-						class="absolute right-0 mr-4 {currentTheme === theme && 'text-primary-content'}"
+						icon={themeIconRecord[themeOption]}
+						class="absolute right-0 mr-4 {theme.currentTheme === themeOption &&
+							'text-primary-content'}"
 						width="1.25rem"
 					/>
 				</div>
