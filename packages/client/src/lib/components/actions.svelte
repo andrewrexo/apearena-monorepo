@@ -38,21 +38,23 @@
 				</div>
 			{/if}
 		</div>
-		<button
-			onpointerenter={() => (hoveredButton = true)}
-			onpointerleave={() => (hoveredButton = false)}
-			class="btn-block from-primary to-secondary group relative flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-4 font-bold
+		<a href="/slot" class="w-full">
+			<button
+				onpointerenter={() => (hoveredButton = true)}
+				onpointerleave={() => (hoveredButton = false)}
+				class="btn-block from-primary to-secondary group relative flex transform cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-4 font-bold
          text-neutral-100 shadow-md transition-all
          duration-300 hover:scale-105 hover:text-white hover:shadow-2xl"
-		>
-			{#if hoveredButton}
-				<span class="text-center text-2xl">🍌🍌🍌🍌🍌</span>
-				<div class="absolute inset-0 animate-pulse rounded-xl bg-white opacity-20"></div>
-			{:else}
-				ENTER THE ARENA
-				<span class="-mr-5 h-8 w-8 text-2xl"> 🍌 </span>
-			{/if}
-		</button>
+			>
+				{#if hoveredButton}
+					<span class="text-center text-2xl">🍌🍌🍌🍌🍌</span>
+					<div class="absolute inset-0 animate-pulse rounded-xl bg-white opacity-20"></div>
+				{:else}
+					ENTER THE ARENA
+					<span class="-mr-5 h-8 w-8 text-2xl"> 🍌 </span>
+				{/if}
+			</button>
+		</a>
 	</div>
 </section>
 
