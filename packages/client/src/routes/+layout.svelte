@@ -30,7 +30,7 @@
 		</div>
 
 		<div class="flex flex-1 items-center justify-center">
-			<div class="h-[min(320px,90vh)] w-full max-w-4xl md:h-[min(450px,90vh)]">
+			<div class="h-[min(380px,90vh)] w-full max-w-4xl md:h-[min(450px,90vh)]">
 				{@render children()}
 			</div>
 		</div>

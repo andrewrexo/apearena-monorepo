@@ -2,7 +2,7 @@
 	import { Canvas } from '@threlte/core';
 	import SlotMachineScene from './slot-machine-scene.svelte';
 	import { onMount } from 'svelte';
-	import { fade, fly, scale } from 'svelte/transition';
+	import { scale } from 'svelte/transition';
 
 	let spinning = $state(false);
 	let mounted = $state(false);
@@ -32,20 +32,15 @@
 	let balance = $state(1000);
 	let showParticles = $state(false);
 
-	const SPIN_SPEED = 5;
+	const SPIN_SPEED = 10;
 	const BASE_SPINS = 2;
-	const REEL_DELAY = 100;
-	const STOP_DURATION = 5000;
-
-	let pullArm: () => void = $state(() => {});
+	const STOP_DURATION = 2800;
+	const SYMBOL_COUNT = 5;
 
 	function handleSpin() {
 		if (spinning || balance < betAmount) return;
 
-		pullArm();
-		setTimeout(() => {
-			spin();
-		}, 300);
+		spin();
 	}
 
 	function spin() {
@@ -55,40 +50,34 @@
 		balance -= betAmount;
 		showParticles = false;
 
+		const randomStops = Array(3)
+			.fill(0)
+			.map(() => Math.floor(Math.random() * SYMBOL_COUNT));
+
 		reels = reels.map((reel, i) => {
-			const randomStops = Math.floor(Math.random() * 5);
-			const extraSpins = i * 4;
-			const targetPosition = (BASE_SPINS + extraSpins) * 5 + randomStops;
+			const baseSpins = BASE_SPINS * SYMBOL_COUNT;
+			const extraSpins = i * 3 * SYMBOL_COUNT;
+			const exactTargetPosition = baseSpins + extraSpins + randomStops[i];
 
 			return {
 				...reel,
 				speed: SPIN_SPEED,
-				targetPosition: Math.round(targetPosition),
-				position: 0
+				targetPosition: exactTargetPosition,
+				position: reel.position,
+				stopTime: undefined
 			};
 		});
 
-		const initiateReelStop = (index: number) => {
-			if (index < reels.length) {
-				reels[index].speed = SPIN_SPEED * 0.3;
-			}
-		};
-
-		reels.forEach((_, index) => {
-			setTimeout(() => initiateReelStop(index), REEL_DELAY * 1);
-		});
-
-		const totalDuration = REEL_DELAY * reels.length + STOP_DURATION;
 		setTimeout(() => {
 			checkWin();
 			spinning = false;
-		}, totalDuration);
+		}, STOP_DURATION);
 	}
 
 	function checkWin() {
 		const positions = reels.map((reel) => {
-			const finalPosition = Math.round(reel.position) % 5;
-			return reel.symbols[finalPosition];
+			const normalizedPosition = Math.round(reel.position) % SYMBOL_COUNT;
+			return reel.symbols[normalizedPosition];
 		});
 
 		if (positions.every((pos) => pos === positions[0])) {
@@ -119,7 +108,7 @@
 			<div class="relative max-h-[400px] flex-1">
 				<div class="absolute inset-0">
 					<Canvas>
-						<SlotMachineScene {reels} spinning={true} {showParticles} bind:pullArm />
+						<SlotMachineScene {reels} spinning={true} {showParticles} />
 					</Canvas>
 				</div>
 			</div>
@@ -129,12 +118,15 @@
 			out:scale={{ duration: 300 }}
 			onclick={handleSpin}
 			disabled={spinning || balance < betAmount}
-			class="btn-block no-animation btn from-primary to-secondary z-10 mx-auto flex max-w-[90%]
-            rounded-2xl bg-gradient-to-r py-4 font-bold text-neutral-100 shadow-md transition-all hover:text-white hover:shadow-2xl active:scale-105 active:shadow-2xl
-            disabled:text-neutral-200 md:w-[300px]"
+			class="btn-block btn from-primary to-secondary transition-position no-animation z-10 mx-auto mb-4
+				flex max-w-[95%] rounded-full bg-gradient-to-r py-4
+				font-bold
+				text-neutral-100 shadow-[0_0_15px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)]
+				hover:text-white hover:shadow-[0_0_25px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)] active:scale-[0.98]
+				active:shadow-inner disabled:cursor-not-allowed
+				disabled:opacity-50 md:w-[400px]"
 		>
-			{spinning ? 'Spinning...' : `PULL for ${betAmount} `}
-			<span>🎰</span>
+			{spinning ? 'Spinning...' : `PULL`}
 		</button>
 	{:else}
 		<div class="flex flex-1 items-center justify-center">

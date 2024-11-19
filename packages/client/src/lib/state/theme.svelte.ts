@@ -1,5 +1,7 @@
 import type { THSL } from '$lib/color';
 import { oklchStringToTLCH, oklchToRGB, rgbToHSL } from '$lib/color';
+import { hslToStringWithOpacity } from '$lib/formatters';
+import { hslToString } from '$lib/formatters';
 
 export const defaultTheme = 'sunset';
 
@@ -7,6 +9,14 @@ const createThemeState = () => {
 	let currentTheme = $state('');
 	let primaryColor = $state<THSL>({ h: 210, s: 100, l: 50 });
 	let secondaryColor = $state<THSL>({ h: 25, s: 100, l: 50 });
+
+	let colors = $derived.by(() => {
+		return {
+			primary: hslToString(primaryColor),
+			secondary: hslToString(secondaryColor),
+			primaryOpaque: hslToStringWithOpacity(primaryColor, 0.5)
+		};
+	});
 
 	if (typeof document !== 'undefined') {
 		currentTheme = document.body.getAttribute('data-theme') ?? defaultTheme;
@@ -41,6 +51,9 @@ const createThemeState = () => {
 		},
 		get secondaryColor() {
 			return secondaryColor;
+		},
+		get colors() {
+			return colors;
 		},
 		updateThemeColors
 	};

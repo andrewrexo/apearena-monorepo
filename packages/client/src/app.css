@@ -29,6 +29,19 @@
 			background-position: 300% center;
 		}
 	}
+
+	@keyframes vibrate {
+		0% {
+			text-shadow:
+				0 0 0px theme(colors.primary),
+				0 0 2px theme(colors.primary);
+		}
+		100% {
+			text-shadow:
+				0 0 2px theme(colors.primary),
+				0 0 4px theme(colors.primary);
+		}
+	}
 }
 
 canvas {
