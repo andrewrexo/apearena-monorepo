@@ -1,7 +1,7 @@
 import type { THSL } from '$lib/color';
 import { oklchStringToTLCH, oklchToRGB, rgbToHSL } from '$lib/color';
 
-export const defaultTheme = 'night';
+export const defaultTheme = 'sunset';
 
 const createThemeState = () => {
 	let currentTheme = $state('');

@@ -45,7 +45,7 @@
 		if (savedTheme && themeList.includes(savedTheme)) {
 			theme.currentTheme = savedTheme;
 			theme.updateThemeColors();
-		} else if (savedTheme) {
+		} else if (!savedTheme) {
 			localStorage.setItem('theme', defaultTheme);
 		}
 		mounted = true;
