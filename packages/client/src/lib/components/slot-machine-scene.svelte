@@ -13,14 +13,14 @@
 	let primaryColorOpaque = $derived(hslToStringWithOpacity(theme.primaryColor, 0.5));
 
 	let particles = $state(
-		Array(50)
+		Array(30)
 			.fill(null)
 			.map(() => ({
-				x: Math.random() * 20 - 10,
-				y: Math.random() * 15 - 5,
-				z: Math.random() * 2,
-				scale: Math.random() * 0.5 + 0.25,
-				speed: Math.random() * 10 + 1
+				x: Math.random() * 10 - 5,
+				y: Math.random() * 10 - 5,
+				z: Math.random() * 5,
+				scale: Math.random() * 0.5 + 0.5,
+				speed: Math.random() * 2 + 1
 			}))
 	);
 
@@ -66,11 +66,27 @@
 		damping: 0.1
 	});
 
-	// Enhanced animation system
+	// Add these with the other spring declarations near the top of the script
+	const jackpotScale = spring(1, {
+		stiffness: 0.1,
+		damping: 0.3
+	});
+
+	const jackpotRotation = spring(0, {
+		stiffness: 0.1,
+		damping: 0.3
+	});
+
+	const jackpotGlow = spring(1, {
+		stiffness: 0.15,
+		damping: 0.4
+	});
+
+	// Replace the useTask animation section with this corrected version
 	useTask((delta: number) => {
 		if (spinning) {
 			reels = reels.map((reel, reelIndex) => {
-				if (reel.speed === 0) return reel; // Skip static reels
+				if (reel.speed === 0) return reel;
 
 				const distanceToTarget = reel.targetPosition - reel.position;
 				if (Math.abs(distanceToTarget) < POSITION_EPSILON) {
@@ -87,16 +103,26 @@
 				};
 			});
 
-			// Batch spring updates
-			const time = Date.now() * 0.001;
+			const currentTime = Date.now() * 0.001;
+
+			// Update all spring animations
 			rotationSpring.set({
-				x: 0.2 + Math.sin(time) * 0.03,
-				y: Math.cos(time * 2) * 0.05,
-				z: Math.sin(time) * 0.02
+				x: 0.2 + Math.sin(currentTime) * 0.03,
+				y: Math.cos(currentTime * 2) * 0.05,
+				z: Math.sin(currentTime) * 0.02
 			});
+
+			jackpotScale.set(1 + Math.sin(currentTime * 4) * 0.1);
+			jackpotRotation.set(Math.sin(currentTime * 2) * 0.2);
+			jackpotGlow.set(1.5 + Math.sin(currentTime * 3) * 0.5);
+		} else {
+			const currentTime = Date.now() * 0.001;
+			jackpotScale.set(1 + Math.sin(currentTime) * 0.05);
+			jackpotRotation.set(Math.sin(currentTime * 0.5) * 0.1);
+			jackpotGlow.set(1 + Math.sin(currentTime * 0.8) * 0.2);
 		}
 
-		// Only update particles if they're visible
+		// Particle updates remain the same
 		if (showParticles && particles.some((p) => p.scale > 0.01)) {
 			particles = particles
 				.map((p) => ({
@@ -104,7 +130,7 @@
 					y: p.y + p.speed * delta,
 					scale: p.scale * 0.99
 				}))
-				.filter((p) => p.scale > 0.01); // Remove tiny particles
+				.filter((p) => p.scale > 0.01);
 		}
 	});
 
@@ -282,6 +308,36 @@
 	</T.Group>
 </T.Group>
 
+<T.Group position.y={2.8} position.z={0.5} rotation.y={$jackpotRotation}>
+	<HTML
+		transform
+		occlude={false}
+		scale={$jackpotScale}
+		style="
+			font-size: 32px;
+			font-weight: 800;
+			padding: 60px;
+			margin-bottom: -10px;
+			color: #fff;
+			text-align: center;
+			text-shadow: 
+				0 0 5px {primaryColorOpaque},
+				0 0 20px {primaryColorOpaque},
+				0 0 10px {primaryColorOpaque},
+				0 0 10px {primaryColorOpaque};
+			font-family: 'PixelFont', system-ui, sans-serif;
+			white-space: nowrap;
+			pointer-events: none;
+			transform-origin: center center;
+			will-change: transform;
+			letter-spacing: 0.1em;
+			-webkit-background-clip: text;
+      "
+	>
+		JACKPOT
+	</HTML>
+</T.Group>
+
 <!-- Win celebration particles -->
 {#if showParticles}
 	{#each particles as particle}
@@ -303,6 +359,26 @@
 		}
 		50% {
 			filter: brightness(1.1) contrast(1.05);
+		}
+	}
+
+	@keyframes float {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+
+	@keyframes glow {
+		0%,
+		100% {
+			filter: brightness(1) drop-shadow(0 0 15px var(--primary-color));
+		}
+		50% {
+			filter: brightness(1.5) drop-shadow(0 0 30px var(--primary-color));
 		}
 	}
 </style>
