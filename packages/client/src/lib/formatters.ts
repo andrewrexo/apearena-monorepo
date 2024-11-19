@@ -1,4 +1,4 @@
-import { oklchToRGB, rgbToHSL, type THSL, type TLCH } from './color';
+import { oklchToRGB, rgbToHSL, type THSL, type TLCH, hslToRGB, rgbToRGBA } from './color';
 
 export function formatCurrency(value: number) {
 	return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -30,3 +30,12 @@ export const oklchStringToTLCH = (oklch: string): TLCH => {
 
 	return { l, c, h };
 };
+
+export function hslToRGBA(hsl: THSL, alpha: number): string {
+	const rgb = hslToRGB(hsl);
+	return rgbToRGBA(rgb, alpha);
+}
+
+export function hslToStringWithOpacity(hsl: THSL, alpha: number): string {
+	return hslToRGBA(hsl, alpha);
+}

@@ -3,7 +3,7 @@
 	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import theme from '$lib/state/theme.svelte';
+	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 
 	let themeList = $state(['night', 'dark', 'dracula', 'sunset', 'dim']);
 	let isOpen = $state(false);
@@ -45,6 +45,8 @@
 		if (savedTheme && themeList.includes(savedTheme)) {
 			theme.currentTheme = savedTheme;
 			theme.updateThemeColors();
+		} else if (savedTheme) {
+			localStorage.setItem('theme', defaultTheme);
 		}
 		mounted = true;
 	});

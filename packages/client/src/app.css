@@ -23,6 +23,17 @@
 		background-size: 300% auto;
 		animation: shine 4s linear infinite;
 	}
+
+	@keyframes shine {
+		to {
+			background-position: 300% center;
+		}
+	}
+}
+
+canvas {
+	image-rendering: pixelated;
+	background-color: transparent !important;
 }
 
 @keyframes gradient {

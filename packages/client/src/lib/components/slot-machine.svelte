@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
 	import SlotMachineScene from './slot-machine-scene.svelte';
+	import { onMount } from 'svelte';
+	import { fade, fly, scale } from 'svelte/transition';
 
 	let spinning = $state(false);
+	let mounted = $state(false);
 	let reels = $state([
 		{
 			symbols: ['🍌', '💎', '🔥', '🎰', '🎲', '🍎', '🍇', '🚀'],
@@ -100,21 +103,42 @@
 			winAmount = 0;
 		}
 	}
+
+	onMount(() => {
+		mounted = true;
+	});
 </script>
 
-<div class="relative flex h-[350px] w-full flex-col items-center justify-center">
-	<Canvas>
-		<SlotMachineScene {reels} spinning={true} {showParticles} bind:pullArm />
-	</Canvas>
+<div class="mb-4 flex h-full w-full flex-col md:mb-8">
+	{#if mounted}
+		<div
+			class="relative flex h-full w-full flex-col"
+			in:scale={{ duration: 300, start: 0.5 }}
+			out:scale={{ duration: 300, start: 0.1 }}
+		>
+			<div class="relative max-h-[400px] flex-1">
+				<div class="absolute inset-0">
+					<Canvas>
+						<SlotMachineScene {reels} spinning={true} {showParticles} bind:pullArm />
+					</Canvas>
+				</div>
+			</div>
+		</div>
+		<button
+			in:scale={{ duration: 300 }}
+			out:scale={{ duration: 300 }}
+			onclick={handleSpin}
+			disabled={spinning || balance < betAmount}
+			class="btn-block no-animation btn from-primary to-secondary z-10 mx-auto flex max-w-[90%]
+            rounded-2xl bg-gradient-to-r py-4 font-bold text-neutral-100 shadow-md transition-all hover:text-white hover:shadow-2xl active:scale-105 active:shadow-2xl
+            disabled:text-neutral-200 md:w-[300px]"
+		>
+			{spinning ? 'Spinning...' : `PULL for ${betAmount} `}
+			<span>🎰</span>
+		</button>
+	{:else}
+		<div class="flex flex-1 items-center justify-center">
+			<span class="loading loading-lg loading-dots text-primary"></span>
+		</div>
+	{/if}
 </div>
-
-<button
-	onclick={handleSpin}
-	disabled={spinning || balance < betAmount}
-	class="btn-block md:btn-wide from-primary to-secondary mx-auto -mt-4 mb-4 rounded-xl bg-gradient-to-r py-4 font-bold text-neutral-100 shadow-md
-   transition-all hover:text-white hover:shadow-2xl active:scale-105 active:shadow-2xl md:-mt-10"
-	class:btn-disabled={spinning || balance < betAmount}
-	class:bg-opacity-50={spinning || balance < betAmount}
->
-	{spinning ? 'Spinning...' : 'PULL ARM'}
-</button>

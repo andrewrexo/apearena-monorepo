@@ -15,7 +15,7 @@
 	});
 </script>
 
-<section class="flex flex-col items-center pt-4">
+<section class="flex flex-col items-center pt-10 md:pt-4">
 	<span
 		class:bounce-twice={shouldBounce}
 		class="animated-title font-pixel flex transform cursor-default select-none flex-col bg-clip-text text-center text-6xl font-extrabold text-transparent transition-transform hover:scale-105 md:pb-2"
@@ -59,30 +59,10 @@
 </section>
 
 <style lang="postcss">
-	.animated-title {
-		background-image: linear-gradient(
-			-60deg,
-			theme(colors.primary) 0%,
-			theme(colors.primary) 20%,
-			theme(colors.secondary) 40%,
-			theme(colors.secondary) 60%,
-			theme(colors.primary) 80%,
-			theme(colors.primary) 100%
-		);
-		background-size: 300% auto;
-		animation: shine 4s linear infinite;
-	}
-
 	.bounce-twice {
 		animation:
 			shine 4s linear infinite,
 			bounceTwo 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-	}
-
-	@keyframes shine {
-		to {
-			background-position: 300% center;
-		}
 	}
 
 	@keyframes bounceTwo {

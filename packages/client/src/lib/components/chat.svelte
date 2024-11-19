@@ -17,15 +17,14 @@
 
 	let chatContainer: HTMLDivElement;
 
-	// Auto-scroll to bottom when new messages arrive
 	$effect(() => {
 		if (globalChatState.messages.length) {
-			setTimeout(() => {
+			requestAnimationFrame(() => {
 				chatContainer?.scrollTo({
 					top: chatContainer.scrollHeight,
-					behavior: 'smooth'
+					behavior: 'instant' // changed from 'smooth' to prevent page jumping
 				});
-			}, 0);
+			});
 		}
 	});
 
@@ -36,12 +35,12 @@
 	});
 </script>
 
-<div class="flex h-[260px] w-full flex-col">
+<div class="flex h-[260px] w-full flex-col overflow-hidden">
 	<div
-		class="border-tl-lg border-tr-lg bg-base-300 h-full space-y-2 overflow-y-auto rounded-t-lg bg-opacity-30 p-2 px-4"
+		class="border-tl-lg border-tr-lg bg-base-300 h-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg bg-opacity-30 p-2 px-4"
 		bind:this={chatContainer}
 	>
-		{#each globalChatState.messages as message (`${message.sessionId}-${message.timestamp}`)}
+		{#each globalChatState.messages as message, index (`${message.sessionId}-${message.timestamp}-${index}`)}
 			<div class="message">
 				<div class="flex items-baseline gap-2 text-xs">
 					<span class="font-medium">{message.sessionId}</span>

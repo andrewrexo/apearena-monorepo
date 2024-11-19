@@ -1,28 +1,26 @@
 <script lang="ts">
 	import { T, useTask } from '@threlte/core';
+	import { HTML } from '@threlte/extras';
 	import { spring } from 'svelte/motion';
-	import { ContactShadows, HTML } from '@threlte/extras';
-	import { onMount } from 'svelte';
-	import { hslToString } from '$lib/formatters';
+	import { onDestroy, onMount } from 'svelte';
+	import { hslToString, hslToStringWithOpacity } from '$lib/formatters';
 	import theme from '$lib/state/theme.svelte';
-	import { MeshToonMaterial } from 'three';
 
 	let { pullArm = $bindable(), reels = [], spinning = false, showParticles = true } = $props();
 
 	let primaryColor = $derived(hslToString(theme.primaryColor));
 	let secondaryColor = $derived(hslToString(theme.secondaryColor));
+	let primaryColorOpaque = $derived(hslToStringWithOpacity(theme.primaryColor, 0.5));
 
-	// Win celebration effects
-	let particleCount = $state(30);
 	let particles = $state(
-		Array(30)
+		Array(50)
 			.fill(null)
 			.map(() => ({
-				x: Math.random() * 10 - 5,
-				y: Math.random() * 10 - 5,
-				z: Math.random() * 5,
-				scale: Math.random() * 0.5 + 0.5,
-				speed: Math.random() * 2 + 1
+				x: Math.random() * 20 - 10,
+				y: Math.random() * 15 - 5,
+				z: Math.random() * 2,
+				scale: Math.random() * 0.5 + 0.25,
+				speed: Math.random() * 10 + 1
 			}))
 	);
 
@@ -72,56 +70,41 @@
 	useTask((delta: number) => {
 		if (spinning) {
 			reels = reels.map((reel, reelIndex) => {
-				let newPosition = reel.position;
-				let newSpeed = reel.speed;
+				if (reel.speed === 0) return reel; // Skip static reels
 
 				const distanceToTarget = reel.targetPosition - reel.position;
-
-				// Check if this reel should be moving
-				if (distanceToTarget > 0) {
-					if (distanceToTarget < POSITION_EPSILON) {
-						newPosition = Math.round(reel.targetPosition);
-						newSpeed = 0;
-					} else {
-						newPosition = reel.position + newSpeed * delta * 2;
-					}
+				if (Math.abs(distanceToTarget) < POSITION_EPSILON) {
+					return {
+						...reel,
+						position: Math.round(reel.targetPosition),
+						speed: 0
+					};
 				}
 
 				return {
 					...reel,
-					position: newPosition,
-					speed: newSpeed
+					position: reel.position + reel.speed * delta * 2
 				};
 			});
 
-			reelLightIntensity.set(1);
-			cabinetGlow.set(0.1);
-			symbolGlow.set(0.8);
-			cabinetGlow.set(0.3);
-		} else {
-			reels = reels.map((reel) => ({
-				...reel,
-				position: Math.round(reel.position)
-			}));
-		}
-
-		if (spinning) {
+			// Batch spring updates
+			const time = Date.now() * 0.001;
 			rotationSpring.set({
-				x: 0.2 + Math.sin(Date.now() * 0.001) * 0.03,
-				y: Math.cos(Date.now() * 0.002) * 0.05,
-				z: Math.sin(Date.now() * 0.001) * 0.02
+				x: 0.2 + Math.sin(time) * 0.03,
+				y: Math.cos(time * 2) * 0.05,
+				z: Math.sin(time) * 0.02
 			});
-		} else {
-			rotationSpring.set({ x: 0.2, y: 0, z: 0 });
 		}
 
-		// Update particles
-		if (showParticles) {
-			particles = particles.map((p) => ({
-				...p,
-				y: p.y + p.speed * delta,
-				scale: p.scale * 0.99
-			}));
+		// Only update particles if they're visible
+		if (showParticles && particles.some((p) => p.scale > 0.01)) {
+			particles = particles
+				.map((p) => ({
+					...p,
+					y: p.y + p.speed * delta,
+					scale: p.scale * 0.99
+				}))
+				.filter((p) => p.scale > 0.01); // Remove tiny particles
 		}
 	});
 
@@ -150,13 +133,22 @@
 
 		setTimeout(() => {
 			showParticles = false;
-		}, 2000);
+		}, 3200);
+	});
+
+	onDestroy(() => {
+		// Clean up any Three.js resources
+		particles = [];
+		// Reset springs
+		rotationSpring.set({ x: 0, y: 0, z: 0 });
+		armSpring.set({ rotation: 0 });
 	});
 </script>
 
-<T.PerspectiveCamera position={[0, 0, 11]} makeDefault fov={45} />
+<!-- Update the camera -->
+<T.PerspectiveCamera position={[0, 0, 9]} makeDefault fov={45} />
 
-<T.Group position.y={1}>
+<T.Group position.y={0.5}>
 	<T.AmbientLight intensity={0.2} />
 	<T.SpotLight
 		position={[10, 4, 5]}
@@ -220,18 +212,40 @@
 								<HTML
 									transform
 									occlude={false}
-									receiveShadow
-									castShadow
-									style="background: oklch(var(--p)); 
-                  width: 60px;
-										   height: 60px;
-										   display: flex;
-										   align-items: center;
-										   justify-content: center;
-										   font-size: 30px;
-										   color: #ffffff;
-										   transform-style: preserve-3d;
-                       "
+									style="
+										width: 64px;
+										height: 64px;
+										display: flex;
+                    position: relative;
+										align-items: center;
+										justify-content: center;
+										font-size: 32px;
+										color: #ffffff;
+										transform-style: preserve-3d;
+										border: 2px solid rgba(255, 255, 255, 0.15);
+										border-radius: 6px;
+										text-shadow: 
+											2px 2px 0 rgba(0, 0, 0, 0.2),
+											0 0 10px rgba(255, 255, 255, 0.5);
+										font-family: 'Inter', system-ui, sans-serif;
+										font-weight: 700;
+										background-image: 
+											linear-gradient(
+												135deg,
+												rgba(255, 255, 255, 0.1) 0%,
+												transparent 100%
+											),
+											repeating-linear-gradient(
+												0deg,
+												rgba(255, 255, 255, 0.05) 0px,
+												rgba(255, 255, 255, 0.05) 1px,
+												transparent 1px,
+												transparent 2px
+											);
+										background-color: {primaryColorOpaque};
+										bg-opacity: 0.5;
+										transition: all 0.5s ease;
+									"
 								>
 									{symbol}
 								</HTML>
@@ -282,13 +296,13 @@
 {/if}
 
 <style lang="postcss">
-	/* Add some CSS glow effects */
-	:global(.symbol-container) {
-		filter: drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.5));
-		transition: filter 0.3s ease;
-	}
-
-	:global(.spinning .symbol-container) {
-		filter: drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.8));
+	@keyframes pulse {
+		0%,
+		100% {
+			filter: brightness(1) contrast(1);
+		}
+		50% {
+			filter: brightness(1.1) contrast(1.05);
+		}
 	}
 </style>

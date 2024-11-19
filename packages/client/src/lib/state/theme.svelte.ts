@@ -1,13 +1,15 @@
 import type { THSL } from '$lib/color';
 import { oklchStringToTLCH, oklchToRGB, rgbToHSL } from '$lib/color';
 
+export const defaultTheme = 'night';
+
 const createThemeState = () => {
 	let currentTheme = $state('');
 	let primaryColor = $state<THSL>({ h: 210, s: 100, l: 50 });
 	let secondaryColor = $state<THSL>({ h: 25, s: 100, l: 50 });
 
 	if (typeof document !== 'undefined') {
-		currentTheme = document.body.getAttribute('data-theme') ?? 'dracula';
+		currentTheme = document.body.getAttribute('data-theme') ?? defaultTheme;
 	}
 
 	function updateThemeColors() {
