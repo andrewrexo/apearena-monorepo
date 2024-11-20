@@ -133,6 +133,31 @@
 				}))
 				.filter((p) => p.scale > 0.01);
 		}
+
+		// Update flying symbols
+		if (flyingSymbols.length > 0) {
+			flyingSymbols = flyingSymbols
+				.map((symbol) => ({
+					...symbol,
+					y: symbol.y + symbol.speed * delta,
+					rotation: symbol.rotation + symbol.rotationSpeed * delta,
+					opacity: symbol.opacity * 0.98,
+					scale: symbol.scale * 0.99
+				}))
+				.filter((symbol) => symbol.opacity > 0.01);
+		}
+
+		// Update multiplier texts
+		if (multiplierTexts.length > 0) {
+			multiplierTexts = multiplierTexts
+				.map((text) => ({
+					...text,
+					y: text.y + text.speed * delta,
+					opacity: text.opacity * 0.97,
+					scale: text.scale * 1.02
+				}))
+				.filter((text) => text.opacity > 0.01);
+		}
 	});
 
 	const armSpring = spring(
@@ -208,12 +233,70 @@
 		points: [] as { x: number; y: number; z: number; opacity: number }[]
 	});
 
+	// Add these new state variables near the top with other state declarations
+	let flyingSymbols = $state([]);
+	let multiplierTexts = $state([]);
+
+	// Add these types and helper functions after other similar declarations
+	type FlyingSymbol = {
+		symbol: string;
+		x: number;
+		y: number;
+		z: number;
+		rotation: number;
+		scale: number;
+		speed: number;
+		rotationSpeed: number;
+		opacity: number;
+	};
+
+	type MultiplierText = {
+		value: string;
+		x: number;
+		y: number;
+		z: number;
+		scale: number;
+		speed: number;
+		opacity: number;
+	};
+
+	function spawnFlyingSymbols(symbols: string[], multiplier: number) {
+		const newSymbols = symbols.map((symbol) => ({
+			symbol,
+			x: (Math.random() - 0.5) * 4,
+			y: -1,
+			z: Math.random() * 2,
+			rotation: Math.random() * Math.PI * 2,
+			scale: 0.5,
+			speed: 3 + Math.random() * 2,
+			rotationSpeed: (Math.random() - 0.5) * 4,
+			opacity: 1
+		}));
+
+		flyingSymbols = [...flyingSymbols, ...newSymbols];
+
+		// Spawn multiplier text
+		multiplierTexts = [
+			...multiplierTexts,
+			{
+				value: `${multiplier}x`,
+				x: (Math.random() - 0.5) * 2,
+				y: -1,
+				z: 1,
+				scale: 1,
+				speed: 4 + Math.random() * 2,
+				opacity: 1
+			}
+		];
+	}
+
 	// Bind the functions to the sceneActions prop
 	$effect(() => {
 		if (sceneActions) {
 			sceneActions.shakeCamera = shakeCamera;
 			sceneActions.spawnWinParticles = spawnWinParticles;
 			sceneActions.spawnMultiplierTrail = spawnMultiplierTrail;
+			sceneActions.spawnFlyingSymbols = spawnFlyingSymbols;
 		}
 	});
 </script>
@@ -276,3 +359,38 @@
 		</T.Sprite>
 	{/each}
 {/if}
+
+<!-- Flying Symbols -->
+{#each flyingSymbols as symbol}
+	<T.Group
+		position.x={symbol.x}
+		position.y={symbol.y}
+		position.z={symbol.z}
+		rotation.z={symbol.rotation}
+		scale={symbol.scale}
+	>
+		<HTML
+			transform
+			occlude
+			position.y={0}
+			style="opacity: {symbol.opacity}; font-size: 2em; color: {theme.colors.primary};"
+		>
+			{symbol.symbol}
+		</HTML>
+	</T.Group>
+{/each}
+
+<!-- Multiplier Texts -->
+{#each multiplierTexts as text}
+	<T.Group position.x={text.x} position.y={text.y} position.z={text.z} scale={text.scale}>
+		<HTML
+			transform
+			occlude
+			position.y={0}
+			style="opacity: {text.opacity}; font-size: 3em; color: {theme.colors
+				.secondary}; font-weight: bold;"
+		>
+			{text.value}
+		</HTML>
+	</T.Group>
+{/each}

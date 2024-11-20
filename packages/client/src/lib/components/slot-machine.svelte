@@ -53,7 +53,8 @@
 	let sceneActions = $state({
 		shakeCamera: (intensity: number) => {},
 		spawnWinParticles: (multiplier: number) => {},
-		spawnMultiplierTrail: (multiplier: number) => {}
+		spawnMultiplierTrail: (multiplier: number) => {},
+		spawnFlyingSymbols: (symbols: string[], multiplier: number) => {}
 	});
 
 	function spin() {
@@ -117,6 +118,7 @@
 			sceneActions.shakeCamera(0.8);
 			sceneActions.spawnWinParticles(10);
 			sceneActions.spawnMultiplierTrail(10);
+			sceneActions.spawnFlyingSymbols(positions, 3); // For a 3x win with apple symbols
 		} else if (positions[0] === positions[1] || positions[1] === positions[2]) {
 			winAmount = betAmount * 2;
 			balance += winAmount;
