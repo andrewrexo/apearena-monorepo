@@ -6,42 +6,55 @@
 
 	let spinning = $state(false);
 	let mounted = $state(false);
-	let reels = $state([
-		{
-			symbols: ['🍌', '💎', '🔥', '🎰', '🎲', '🍎', '🍇', '🚀'],
-			position: 0,
-			speed: 0,
-			targetPosition: 0
-		},
-		{
-			symbols: ['💎', '🚀', '🍌', '🍇', '🍉', '🎲', '🎰', '🔥'],
-			position: 0,
-			speed: 0,
-			targetPosition: 0
-		},
-		{
-			symbols: ['🚀', '🎰', '💎', '🍇', '🎲', '🍉', '🔥', '🍌'],
-			position: 0,
-			speed: 0,
-			targetPosition: 0
+
+	const SYMBOLS = ['🍌', '💎', '🔥', '🎰', '🎲'];
+	const SYMBOL_COUNT = 5;
+	const SPIN_SPEED = 15;
+	const SPIN_TIME = 2000;
+	const SPIN_DELAY = 500;
+
+	type Reel = {
+		symbols: string[];
+		position: number;
+		speed: number;
+		targetPosition: number;
+		spinDuration: number;
+	};
+
+	// Step 1: Generate a random result first
+	function generateSpinResult() {
+		return Array(3)
+			.fill(0)
+			.map(() => Math.floor(Math.random() * SYMBOL_COUNT));
+	}
+
+	// Step 2: Create a reel that will land on our target symbol
+	function createReelForTarget(targetIndex: number) {
+		// Create a reel array that puts our target symbol at position 0
+		const reel = [...SYMBOLS];
+		// Rotate array so target symbol is at position 0
+		while (reel[0] !== SYMBOLS[targetIndex]) {
+			reel.push(reel.shift()!);
 		}
-	]);
+		return reel;
+	}
+
+	let reels = $state([
+		{ symbols: SYMBOLS, position: 0, speed: 0, targetPosition: 0, spinDuration: 0 },
+		{ symbols: SYMBOLS, position: 0, speed: 0, targetPosition: 0, spinDuration: 0 },
+		{ symbols: SYMBOLS, position: 0, speed: 0, targetPosition: 0, spinDuration: 0 }
+	] as Reel[]);
 
 	let winAmount = $state(0);
 	let betAmount = $state(100);
 	let balance = $state(1000);
 	let showParticles = $state(false);
 
-	const SPIN_SPEED = 10;
-	const BASE_SPINS = 2;
-	const STOP_DURATION = 2800;
-	const SYMBOL_COUNT = 5;
-
-	function handleSpin() {
-		if (spinning || balance < betAmount) return;
-
-		spin();
-	}
+	let sceneActions = $state({
+		shakeCamera: (intensity: number) => {},
+		spawnWinParticles: (multiplier: number) => {},
+		spawnMultiplierTrail: (multiplier: number) => {}
+	});
 
 	function spin() {
 		if (spinning || balance < betAmount) return;
@@ -50,44 +63,67 @@
 		balance -= betAmount;
 		showParticles = false;
 
-		const randomStops = Array(3)
-			.fill(0)
-			.map(() => Math.floor(Math.random() * SYMBOL_COUNT));
+		// Step 1: Determine the final result
+		const spinResult = generateSpinResult();
+		console.log('Spin result indices:', spinResult);
+		console.log(
+			'Target symbols:',
+			spinResult.map((i) => SYMBOLS[i])
+		);
 
-		reels = reels.map((reel, i) => {
-			const baseSpins = BASE_SPINS * SYMBOL_COUNT;
-			const extraSpins = i * 3 * SYMBOL_COUNT;
-			const exactTargetPosition = baseSpins + extraSpins + randomStops[i];
+		// Step 2: Create reels that will land on these symbols
+		reels = reels.map((_, i) => {
+			const spinDuration = SPIN_TIME + i * SPIN_DELAY;
+			const targetSymbolIndex = spinResult[i];
+			const newSymbols = createReelForTarget(targetSymbolIndex);
+
+			// Each reel does 4 complete rotations plus its index (for staggered effect)
+			const completeRotations = 4 + i;
+			const targetPosition = completeRotations * SYMBOL_COUNT;
 
 			return {
-				...reel,
+				symbols: newSymbols,
+				position: 0,
 				speed: SPIN_SPEED,
-				targetPosition: exactTargetPosition,
-				position: reel.position,
-				stopTime: undefined
+				targetPosition,
+				spinDuration
 			};
 		});
 
-		setTimeout(() => {
-			checkWin();
-			spinning = false;
-		}, STOP_DURATION);
+		// Stop each reel at its designated time
+		reels.forEach((reel, i) => {
+			setTimeout(() => {
+				reels = reels.map((r, index) =>
+					index === i ? { ...r, position: r.targetPosition, speed: 0 } : r
+				);
+
+				if (i === reels.length - 1) {
+					checkWin();
+					spinning = false;
+				}
+			}, reel.spinDuration);
+		});
 	}
 
 	function checkWin() {
-		const positions = reels.map((reel) => {
-			const normalizedPosition = Math.round(reel.position) % SYMBOL_COUNT;
-			return reel.symbols[normalizedPosition];
-		});
+		// Simply check position 0 of each reel's symbols array
+		const positions = reels.map((reel) => reel.symbols[0]);
+		console.log('Final symbols:', positions);
 
 		if (positions.every((pos) => pos === positions[0])) {
 			winAmount = betAmount * 10;
 			balance += winAmount;
 			showParticles = true;
+			sceneActions.shakeCamera(0.8);
+			sceneActions.spawnWinParticles(10);
+			sceneActions.spawnMultiplierTrail(10);
 		} else if (positions[0] === positions[1] || positions[1] === positions[2]) {
 			winAmount = betAmount * 2;
 			balance += winAmount;
 			showParticles = true;
+			sceneActions.shakeCamera(0.3);
+			sceneActions.spawnWinParticles(2);
+			sceneActions.spawnMultiplierTrail(2);
 		} else {
 			winAmount = 0;
 		}
@@ -108,7 +144,7 @@
 			<div class="relative max-h-[400px] flex-1">
 				<div class="absolute inset-0">
 					<Canvas>
-						<SlotMachineScene {reels} spinning={true} {showParticles} />
+						<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
 					</Canvas>
 				</div>
 			</div>
@@ -116,7 +152,7 @@
 		<button
 			in:scale={{ duration: 300 }}
 			out:scale={{ duration: 300 }}
-			onclick={handleSpin}
+			onclick={spin}
 			disabled={spinning || balance < betAmount}
 			class="btn-block btn from-primary to-secondary transition-position no-animation z-10 mx-auto mb-4
 				flex max-w-[95%] rounded-full bg-gradient-to-r py-4

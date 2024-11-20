@@ -6,18 +6,22 @@
 
 	import theme from '$lib/state/theme.svelte';
 	import Reel from './game/slots/reel.svelte';
+	import GameText from './game/slots/game-text.svelte';
 
-	let { reels = [], spinning = false, showParticles = true } = $props();
+	let { reels = [], spinning = false, showParticles = true, sceneActions = $bindable() } = $props();
 
 	let particles = $state(
-		Array(30)
+		Array(40)
 			.fill(null)
 			.map(() => ({
 				x: Math.random() * 10 - 5,
 				y: Math.random() * 10 - 5,
 				z: Math.random() * 5,
 				scale: Math.random() * 0.5 + 0.5,
-				speed: Math.random() * 2 + 1
+				speed: Math.random() * 2 + 1,
+				color: theme.colors.primary,
+				rotationSpeed: Math.random() * 2 - 1,
+				rotation: Math.random() * Math.PI * 2
 			}))
 	);
 
@@ -40,37 +44,86 @@
 		damping: 0.2
 	});
 
+	let cameraShakeActive = $state(false);
+
+	function shakeCamera(intensity = 0.5) {
+		cameraShake.intensity = intensity;
+		cameraShakeActive = true;
+	}
+
+	function spawnMultiplierTrail(multiplier: number) {
+		multiplierTrail.active = true;
+		multiplierTrail.points = Array(20)
+			.fill(null)
+			.map((_, i) => ({
+				x: (Math.random() - 0.5) * 4,
+				y: -1 + i * 0.2,
+				z: Math.random() * 2,
+				opacity: 1
+			}));
+	}
+
 	useTask((delta: number) => {
 		if (spinning) {
-			reels = reels.map((reel, reelIndex) => {
+			reels = reels.map((reel) => {
 				if (reel.speed === 0) return reel;
 
-				const distanceToTarget = reel.targetPosition - reel.position;
-				if (Math.abs(distanceToTarget) < POSITION_EPSILON) {
-					return {
-						...reel,
-						position: Math.round(reel.targetPosition),
-						speed: 0
-					};
-				}
+				// Simple linear interpolation to target
+				const newPosition = reel.position + reel.speed * delta;
 
 				return {
 					...reel,
-					position: reel.position + reel.speed * delta * 2
+					position: newPosition
 				};
 			});
-
-			const currentTime = Date.now() * 0.001;
-
-			rotationSpring.set({
-				x: 0.2 + Math.sin(currentTime) * 0.03,
-				y: Math.cos(currentTime * 2) * 0.05,
-				z: Math.sin(currentTime) * 0.02
-			});
-
-			jackpotScale.set(1 + Math.sin(currentTime * 1) * 0.1);
 		}
 
+		// Camera shake update
+		if (cameraShakeActive && cameraShake.intensity > 0.01) {
+			cameraShake.offset = {
+				x: (Math.random() - 0.5) * cameraShake.intensity,
+				y: (Math.random() - 0.5) * cameraShake.intensity,
+				z: 0
+			};
+			cameraShake.intensity *= cameraShake.decay;
+			cameraPosition.set({
+				x: cameraShake.offset.x,
+				y: cameraShake.offset.y,
+				z: 8 + cameraShake.offset.z
+			});
+
+			if (cameraShake.intensity <= 0.01) {
+				cameraShakeActive = false;
+			}
+		}
+
+		// Multiplier trail update
+		if (multiplierTrail.active) {
+			multiplierTrail.points = multiplierTrail.points
+				.map((p) => ({
+					...p,
+					y: p.y + delta * 2,
+					opacity: p.opacity * 0.95
+				}))
+				.filter((p) => p.opacity > 0.01);
+
+			if (multiplierTrail.points.length === 0) {
+				multiplierTrail.active = false;
+			}
+		}
+
+		// Other animations
+		const currentTime = Date.now() * 0.001;
+
+		rotationSpring.set({
+			x: 0.2 + Math.sin(currentTime) * 0.03,
+			y: Math.cos(currentTime * 2) * 0.05,
+			z: Math.sin(currentTime) * 0.02
+		});
+
+		jackpotScale.set(1 + Math.sin(currentTime * 1) * 0.1);
+
+		// Particle updates
 		if (showParticles && particles.some((p) => p.scale > 0.01)) {
 			particles = particles
 				.map((p) => ({
@@ -90,13 +143,6 @@
 		}
 	);
 
-	function animateArm() {
-		armSpring.set({ rotation: Math.PI / 2 });
-		setTimeout(() => {
-			armSpring.set({ rotation: 0 });
-		}, 500);
-	}
-
 	let windowWidth = $state(0);
 
 	onMount(() => {
@@ -113,8 +159,6 @@
 		};
 	});
 
-	let jackpotFontSize = $derived(windowWidth < 500 ? 24 : 24);
-
 	onMount(() => {
 		showParticles = true;
 
@@ -128,19 +172,77 @@
 		rotationSpring.set({ x: 0, y: 0, z: 0 });
 		armSpring.set({ rotation: 0 });
 	});
+
+	let cameraShake = $state({
+		intensity: 0,
+		decay: 0.9,
+		offset: { x: 0, y: 0, z: 0 }
+	});
+
+	const cameraPosition = spring(
+		{ x: 0, y: 0, z: 8 },
+		{
+			stiffness: 0.3,
+			damping: 0.5
+		}
+	);
+
+	function spawnWinParticles(multiplier: number) {
+		const particleCount = Math.min(50, multiplier * 10);
+		particles = Array(particleCount)
+			.fill(null)
+			.map(() => ({
+				x: (Math.random() - 0.5) * 3,
+				y: -2 + Math.random() * 2,
+				z: Math.random() * 2,
+				scale: Math.random() * 0.3 + 0.2,
+				speed: 3 + Math.random() * 2,
+				color: multiplier > 5 ? theme.colors.secondary : theme.colors.primary,
+				rotationSpeed: Math.random() * 4 - 2,
+				rotation: Math.random() * Math.PI * 2
+			}));
+	}
+
+	let multiplierTrail = $state({
+		active: false,
+		points: [] as { x: number; y: number; z: number; opacity: number }[]
+	});
+
+	// Bind the functions to the sceneActions prop
+	$effect(() => {
+		if (sceneActions) {
+			sceneActions.shakeCamera = shakeCamera;
+			sceneActions.spawnWinParticles = spawnWinParticles;
+			sceneActions.spawnMultiplierTrail = spawnMultiplierTrail;
+		}
+	});
 </script>
 
-<T.PerspectiveCamera position={[0, 0, 8]} makeDefault fov={45}></T.PerspectiveCamera>
+<T.PerspectiveCamera
+	position={[$cameraPosition.x, $cameraPosition.y, $cameraPosition.z]}
+	makeDefault
+	fov={45}
+/>
 
-<T.Group position.y={-0.5} rotation.x={Math.PI / 1.4}>
+<T.Group
+	position.y={2.4}
+	position.z={0.5}
+	scale={$jackpotScale}
+	rotation.x={$rotationSpring.x}
+	rotation.y={$rotationSpring.y}
+	rotation.z={$rotationSpring.z}
+>
+	<GameText text="JACKPOT" />
+</T.Group>
+
+<T.Group position.y={-0.5}>
 	<!-- Update lighting -->
-
 	<T.Group
 		rotation.x={$rotationSpring.x}
 		rotation.y={$rotationSpring.y}
 		rotation.z={$rotationSpring.z}
 	>
-		<Reel {reels} radius={REEL_RADIUS} symbols={SYMBOL_COUNT} epsilon={POSITION_EPSILON} />
+		<Reel {reels} radius={REEL_RADIUS} symbolCount={SYMBOL_COUNT} epsilon={POSITION_EPSILON} />
 	</T.Group>
 </T.Group>
 
@@ -152,15 +254,25 @@
 			position.y={particle.y}
 			position.z={particle.z}
 			scale={particle.scale}
+			rotation.z={particle.rotation}
 		>
-			<T.SphereGeometry args={[0.1, 8, 8]} />
+			<T.PlaneGeometry args={[0.5, 0.5]} />
 			<T.MeshStandardMaterial
-				color={theme.colors.primary}
-				emissive={theme.colors.secondary}
-				emissiveIntensity={3}
+				color={particle.color}
+				emissive={particle.color}
+				emissiveIntensity={2}
 				transparent={true}
 				opacity={0.8}
 			/>
 		</T.Mesh>
+	{/each}
+{/if}
+
+<!-- Add trail rendering -->
+{#if multiplierTrail.active}
+	{#each multiplierTrail.points as point}
+		<T.Sprite position={[point.x, point.y, point.z]} scale={0.5}>
+			<T.SpriteMaterial color={theme.colors.secondary} opacity={point.opacity} transparent={true} />
+		</T.Sprite>
 	{/each}
 {/if}
