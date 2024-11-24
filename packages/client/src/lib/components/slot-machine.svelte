@@ -133,12 +133,16 @@
 
 <div class="flex min-h-[400px] flex-col gap-4 py-4">
 	{#if mounted}
-		<div class="flex h-[300px] flex-col gap-4" style:view-transition-name="page-content">
+		<div
+			class="z-10 flex h-[440px] flex-col gap-4 md:h-[200px]"
+			style:view-transition-name="page-content"
+		>
 			<Canvas>
 				<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
 			</Canvas>
 
 			<ControlPanel />
+			<button class="btn btn-primary" onclick={spin}>Spin</button>
 		</div>
 	{/if}
 </div>

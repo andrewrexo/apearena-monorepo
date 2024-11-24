@@ -12,6 +12,7 @@
 	// Props with defaults
 	let { reels = [], spinning = false, showParticles = true, sceneActions = $bindable() } = $props();
 
+	let particles = $state([]);
 	// Constants moved outside component for better performance
 	const INITIAL_PARTICLE_COUNT = 40;
 	const REEL_RADIUS = 0.925;
@@ -270,11 +271,11 @@
 <T.PerspectiveCamera
 	position={[$cameraPosition.x, $cameraPosition.y, $cameraPosition.z]}
 	makeDefault
-	fov={45}
+	fov={38}
 />
 
 <T.Group
-	position.y={2.4}
+	position.y={1.8}
 	position.z={0.5}
 	scale={$jackpotScale}
 	rotation.x={$rotationSpring.x}

@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="bg-base-300 flex w-full flex-col gap-2 rounded-lg bg-opacity-30 p-4"
+	class="bg-base-300 z-50 flex w-full flex-col gap-2 rounded-lg bg-opacity-30 p-4"
 	in:fly={{ y: 10, duration: 500 }}
 >
 	<div class="flex items-center justify-between">
