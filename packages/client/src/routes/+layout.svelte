@@ -9,6 +9,8 @@
 	import { onMount } from 'svelte';
 	import { scale } from 'svelte/transition';
 	import { onNavigate } from '$app/navigation';
+	import { themeList } from '$lib/theme';
+	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 
 	let { children } = $props();
 
@@ -18,6 +20,17 @@
 		}
 
 		gameClient.join(defaultRoom);
+	});
+
+	onMount(() => {
+		const savedTheme = localStorage.getItem('theme');
+
+		if (savedTheme && themeList.includes(savedTheme)) {
+			theme.currentTheme = savedTheme;
+			theme.updateThemeColors();
+		} else if (!savedTheme) {
+			localStorage.setItem('theme', defaultTheme);
+		}
 	});
 
 	onNavigate((navigation) => {
@@ -35,13 +48,14 @@
 <main
 	class="from-primary/50 to-secondary/10 via-secondary/10 min-h-screen overflow-x-hidden bg-gradient-to-br"
 >
+	<Particles />
 	<div class="flex min-h-screen flex-col overflow-hidden p-4">
 		<div class="flex flex-col">
 			<Marquee />
 			<ThemeControl />
 		</div>
 
-		<div class="flex w-full flex-1 flex-col md:h-[min(300px,90vh)]">
+		<div class="mx-auto flex w-full flex-1 flex-col">
 			{@render children()}
 		</div>
 

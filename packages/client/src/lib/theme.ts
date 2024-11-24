@@ -13,3 +13,5 @@ export const displayThemeNames: Record<string, string> = {
 	sunset: 'Sunset',
 	dim: 'Dim'
 };
+
+export const themeList = Object.keys(themeIconRecord);

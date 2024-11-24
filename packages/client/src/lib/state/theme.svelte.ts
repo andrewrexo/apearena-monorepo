@@ -3,7 +3,7 @@ import { oklchStringToTLCH, oklchToRGB, rgbToHSL } from '$lib/color';
 import { hslToStringWithOpacity } from '$lib/formatters';
 import { hslToString } from '$lib/formatters';
 
-export const defaultTheme = 'sunset';
+export const defaultTheme = 'night';
 
 const createThemeState = () => {
 	let currentTheme = $state('');

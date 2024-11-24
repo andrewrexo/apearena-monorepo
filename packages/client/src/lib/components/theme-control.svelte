@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { themeIconRecord, displayThemeNames } from '$lib/theme';
 	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import theme, { defaultTheme } from '$lib/state/theme.svelte';
+	import theme from '$lib/state/theme.svelte';
 
-	let themeList = $state(['night', 'dark', 'dracula', 'sunset', 'dim']);
 	let isOpen = $state(false);
 	let mounted = $state(false);
 
@@ -39,17 +37,6 @@
 		theme.currentTheme = newTheme;
 		theme.updateThemeColors();
 	}
-
-	onMount(() => {
-		const savedTheme = localStorage.getItem('theme');
-		if (savedTheme && themeList.includes(savedTheme)) {
-			theme.currentTheme = savedTheme;
-			theme.updateThemeColors();
-		} else if (!savedTheme) {
-			localStorage.setItem('theme', defaultTheme);
-		}
-		mounted = true;
-	});
 </script>
 
 <div class="dropdown dropdown-end z-[100000000] min-h-10 self-end pt-2" use:clickOutside>

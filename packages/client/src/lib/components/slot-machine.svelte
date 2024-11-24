@@ -131,15 +131,14 @@
 	});
 </script>
 
-{#if mounted}
-	<div
-		class="flex h-[300px] w-[calc(100%-0.5rem)] flex-col gap-4"
-		style:view-transition-name="page-content"
-	>
-		<Canvas>
-			<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
-		</Canvas>
+<div class="flex min-h-[400px] flex-col gap-4 py-4">
+	{#if mounted}
+		<div class="flex h-[300px] flex-col gap-4" style:view-transition-name="page-content">
+			<Canvas>
+				<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
+			</Canvas>
 
-		<ControlPanel />
-	</div>
-{/if}
+			<ControlPanel />
+		</div>
+	{/if}
+</div>

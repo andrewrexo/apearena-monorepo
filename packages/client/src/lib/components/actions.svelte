@@ -15,7 +15,10 @@
 	});
 </script>
 
-<section class="flex flex-col items-center pt-4 md:pt-4" style:view-transition-name="page-content">
+<section
+	class="flex flex-col items-center justify-center py-4"
+	style:view-transition-name="page-content"
+>
 	<span
 		class:bounce-twice={shouldBounce}
 		class="animated-title font-pixel flex transform cursor-default select-none flex-col bg-clip-text text-center text-6xl font-extrabold text-transparent transition-transform hover:scale-105 md:pb-2"
