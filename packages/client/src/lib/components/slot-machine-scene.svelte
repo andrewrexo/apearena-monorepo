@@ -1,17 +1,35 @@
 <script lang="ts">
 	import { T, useTask } from '@threlte/core';
-	import { HTML, OrbitControls } from '@threlte/extras';
+	import { HTML } from '@threlte/extras';
 	import { spring } from 'svelte/motion';
 	import { onDestroy, onMount } from 'svelte';
+	import { untrack } from 'svelte';
 
 	import theme from '$lib/state/theme.svelte';
 	import Reel from './game/slots/reel.svelte';
 	import GameText from './game/slots/game-text.svelte';
 
+	// Props with defaults
 	let { reels = [], spinning = false, showParticles = true, sceneActions = $bindable() } = $props();
 
-	let particles = $state(
-		Array(40)
+	// Constants moved outside component for better performance
+	const INITIAL_PARTICLE_COUNT = 40;
+	const REEL_RADIUS = 0.925;
+	const SYMBOL_COUNT = 5;
+	const POSITION_EPSILON = 0.25;
+	const CAMERA_Z = 8;
+	const PARTICLE_DECAY = 0.99;
+	const SYMBOL_OPACITY_DECAY = 0.98;
+	const TEXT_OPACITY_DECAY = 0.97;
+
+	let flyingSymbols = $state([]);
+	let multiplierTexts = $state([]);
+	let cameraShakeActive = $state(false);
+	let windowWidth = $state(0);
+
+	// Memoized initial particle setup
+	const createInitialParticles = () =>
+		Array(INITIAL_PARTICLE_COUNT)
 			.fill(null)
 			.map(() => ({
 				x: Math.random() * 10 - 5,
@@ -19,184 +37,35 @@
 				z: Math.random() * 5,
 				scale: Math.random() * 0.5 + 0.5,
 				speed: Math.random() * 2 + 1,
-				color: theme.colors.primary,
+				color: untrack(() => theme.colors.primary),
 				rotationSpeed: Math.random() * 2 - 1,
 				rotation: Math.random() * Math.PI * 2
-			}))
-	);
+			}));
 
+	// Springs with optimized settings
 	const rotationSpring = spring(
 		{ x: 0, y: 0, z: 0 },
 		{
 			stiffness: 0.05,
-			damping: 0.5
+			damping: 0.5,
+			precision: 0.001
 		}
 	);
-
-	// Update these constants
-	const REEL_RADIUS = 0.925;
-	const SYMBOL_COUNT = 5;
-	const REEL_SPACING = 2;
-	const POSITION_EPSILON = 0.25; // Threshold for considering position reached
 
 	const jackpotScale = spring(1, {
 		stiffness: 0.05,
-		damping: 0.2
+		damping: 0.2,
+		precision: 0.001
 	});
 
-	let cameraShakeActive = $state(false);
-
-	function shakeCamera(intensity = 0.5) {
-		cameraShake.intensity = intensity;
-		cameraShakeActive = true;
-	}
-
-	function spawnMultiplierTrail(multiplier: number) {
-		multiplierTrail.active = true;
-		multiplierTrail.points = Array(20)
-			.fill(null)
-			.map((_, i) => ({
-				x: (Math.random() - 0.5) * 4,
-				y: -1 + i * 0.2,
-				z: Math.random() * 2,
-				opacity: 1
-			}));
-	}
-
-	useTask((delta: number) => {
-		if (spinning) {
-			reels = reels.map((reel) => {
-				if (reel.speed === 0) return reel;
-
-				// Simple linear interpolation to target
-				const newPosition = reel.position + reel.speed * delta;
-
-				return {
-					...reel,
-					position: newPosition
-				};
-			});
-		}
-
-		// Camera shake update
-		if (cameraShakeActive && cameraShake.intensity > 0.01) {
-			cameraShake.offset = {
-				x: (Math.random() - 0.5) * cameraShake.intensity,
-				y: (Math.random() - 0.5) * cameraShake.intensity,
-				z: 0
-			};
-			cameraShake.intensity *= cameraShake.decay;
-			cameraPosition.set({
-				x: cameraShake.offset.x,
-				y: cameraShake.offset.y,
-				z: 8 + cameraShake.offset.z
-			});
-
-			if (cameraShake.intensity <= 0.01) {
-				cameraShakeActive = false;
-			}
-		}
-
-		// Multiplier trail update
-		if (multiplierTrail.active) {
-			multiplierTrail.points = multiplierTrail.points
-				.map((p) => ({
-					...p,
-					y: p.y + delta * 2,
-					opacity: p.opacity * 0.95
-				}))
-				.filter((p) => p.opacity > 0.01);
-
-			if (multiplierTrail.points.length === 0) {
-				multiplierTrail.active = false;
-			}
-		}
-
-		// Other animations
-		const currentTime = Date.now() * 0.001;
-
-		rotationSpring.set({
-			x: 0.2 + Math.sin(currentTime) * 0.03,
-			y: Math.cos(currentTime * 2) * 0.05,
-			z: Math.sin(currentTime) * 0.02
-		});
-
-		jackpotScale.set(1 + Math.sin(currentTime * 1) * 0.1);
-
-		// Particle updates
-		if (showParticles && particles.some((p) => p.scale > 0.01)) {
-			particles = particles
-				.map((p) => ({
-					...p,
-					y: p.y + p.speed * delta,
-					scale: p.scale * 0.99
-				}))
-				.filter((p) => p.scale > 0.01);
-		}
-
-		// Update flying symbols
-		if (flyingSymbols.length > 0) {
-			flyingSymbols = flyingSymbols
-				.map((symbol) => ({
-					...symbol,
-					y: symbol.y + symbol.speed * delta,
-					rotation: symbol.rotation + symbol.rotationSpeed * delta,
-					opacity: symbol.opacity * 0.98,
-					scale: symbol.scale * 0.99
-				}))
-				.filter((symbol) => symbol.opacity > 0.01);
-		}
-
-		// Update multiplier texts
-		if (multiplierTexts.length > 0) {
-			multiplierTexts = multiplierTexts
-				.map((text) => ({
-					...text,
-					y: text.y + text.speed * delta,
-					opacity: text.opacity * 0.97,
-					scale: text.scale * 1.02
-				}))
-				.filter((text) => text.opacity > 0.01);
-		}
-	});
-
-	const armSpring = spring(
-		{ rotation: 0 },
+	const cameraPosition = spring(
+		{ x: 0, y: 0, z: CAMERA_Z },
 		{
 			stiffness: 0.3,
-			damping: 0.5
+			damping: 0.5,
+			precision: 0.001
 		}
 	);
-
-	let windowWidth = $state(0);
-
-	onMount(() => {
-		windowWidth = window.innerWidth;
-
-		const handleResize = () => {
-			windowWidth = window.innerWidth;
-		};
-
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	});
-
-	onMount(() => {
-		showParticles = true;
-
-		setTimeout(() => {
-			showParticles = false;
-		}, 3200);
-	});
-
-	onDestroy(() => {
-		particles = [];
-		rotationSpring.set({ x: 0, y: 0, z: 0 });
-		armSpring.set({ rotation: 0 });
-	});
 
 	let cameraShake = $state({
 		intensity: 0,
@@ -204,13 +73,103 @@
 		offset: { x: 0, y: 0, z: 0 }
 	});
 
-	const cameraPosition = spring(
-		{ x: 0, y: 0, z: 8 },
-		{
-			stiffness: 0.3,
-			damping: 0.5
+	// Optimized update task
+	useTask((delta: number) => {
+		if (spinning) {
+			reels = reels.map((reel) =>
+				reel.speed === 0
+					? reel
+					: {
+							...reel,
+							position: reel.position + reel.speed * delta
+						}
+			);
 		}
-	);
+
+		// Camera shake update - only run if active
+		if (cameraShakeActive && cameraShake.intensity > 0.01) {
+			const intensity = cameraShake.intensity;
+			const randomX = (Math.random() - 0.5) * intensity;
+			const randomY = (Math.random() - 0.5) * intensity;
+
+			cameraShake.offset = { x: randomX, y: randomY, z: 0 };
+			cameraShake.intensity *= cameraShake.decay;
+
+			cameraPosition.set({
+				x: randomX,
+				y: randomY,
+				z: CAMERA_Z + cameraShake.offset.z
+			});
+
+			if (cameraShake.intensity <= 0.01) {
+				cameraShakeActive = false;
+			}
+		}
+
+		const currentTime = performance.now() * 0.001;
+
+		rotationSpring.set({
+			x: 0.2 + Math.sin(currentTime) * 0.03,
+			y: Math.cos(currentTime * 2) * 0.05,
+			z: Math.sin(currentTime) * 0.02
+		});
+
+		jackpotScale.set(1 + Math.sin(currentTime) * 0.1);
+
+		// Optimized particle updates with fewer allocations
+		if (showParticles && particles.length > 0) {
+			particles = particles.filter((p) => {
+				p.y += p.speed * delta;
+				p.scale *= PARTICLE_DECAY;
+				return p.scale > 0.01;
+			});
+		}
+
+		// Optimized flying symbols update
+		if (flyingSymbols.length > 0) {
+			flyingSymbols = flyingSymbols.filter((symbol) => {
+				symbol.y += symbol.speed * delta;
+				symbol.rotation += symbol.rotationSpeed * delta;
+				symbol.opacity *= SYMBOL_OPACITY_DECAY;
+				symbol.scale *= 0.99;
+				return symbol.opacity > 0.01;
+			});
+		}
+
+		// Optimized multiplier texts update
+		if (multiplierTexts.length > 0) {
+			multiplierTexts = multiplierTexts.filter((text) => {
+				text.y += text.speed * delta;
+				text.opacity *= TEXT_OPACITY_DECAY;
+				text.scale *= 1.02;
+				return text.opacity > 0.01;
+			});
+		}
+	});
+
+	// Optimized initialization
+	onMount(() => {
+		showParticles = false;
+
+		// Auto-cleanup particles
+		const timer = setTimeout(() => {
+			showParticles = false;
+		}, 3200);
+
+		windowWidth = window.innerWidth;
+
+		const handleResize = () => (windowWidth = window.innerWidth);
+		window.addEventListener('resize', handleResize, { passive: true });
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+			clearTimeout(timer);
+		};
+	});
+
+	onDestroy(() => {
+		rotationSpring.set({ x: 0, y: 0, z: 0 });
+	});
 
 	function spawnWinParticles(multiplier: number) {
 		const particleCount = Math.min(50, multiplier * 10);
@@ -232,11 +191,6 @@
 		active: false,
 		points: [] as { x: number; y: number; z: number; opacity: number }[]
 	});
-
-	// Add these new state variables near the top with other state declarations
-	let flyingSymbols = $state([]);
-	let multiplierTexts = $state([]);
-
 	// Add these types and helper functions after other similar declarations
 	type FlyingSymbol = {
 		symbol: string;
@@ -289,6 +243,18 @@
 			}
 		];
 	}
+
+	const shakeCamera = (intensity: number) => {
+		cameraShake.intensity = intensity;
+		cameraShakeActive = true;
+	};
+
+	const spawnMultiplierTrail = (multiplier: number) => {
+		multiplierTrail.active = true;
+		multiplierTrail.points = Array(10)
+			.fill(null)
+			.map(() => ({ x: 0, y: 0, z: 0, opacity: 1 }));
+	};
 
 	// Bind the functions to the sceneActions prop
 	$effect(() => {

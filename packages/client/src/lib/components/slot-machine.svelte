@@ -2,7 +2,8 @@
 	import { Canvas } from '@threlte/core';
 	import SlotMachineScene from './slot-machine-scene.svelte';
 	import { onMount } from 'svelte';
-	import { scale } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
+	import ControlPanel from './game/slots/control-panel.svelte';
 
 	let spinning = $state(false);
 	let mounted = $state(false);
@@ -64,15 +65,9 @@
 		balance -= betAmount;
 		showParticles = false;
 
-		// Step 1: Determine the final result
 		const spinResult = generateSpinResult();
-		console.log('Spin result indices:', spinResult);
-		console.log(
-			'Target symbols:',
-			spinResult.map((i) => SYMBOLS[i])
-		);
 
-		// Step 2: Create reels that will land on these symbols
+		// Create reels that will land on the spin result
 		reels = reels.map((_, i) => {
 			const spinDuration = SPIN_TIME + i * SPIN_DELAY;
 			const targetSymbolIndex = spinResult[i];
@@ -118,7 +113,7 @@
 			sceneActions.shakeCamera(0.8);
 			sceneActions.spawnWinParticles(10);
 			sceneActions.spawnMultiplierTrail(10);
-			sceneActions.spawnFlyingSymbols(positions, 3); // For a 3x win with apple symbols
+			sceneActions.spawnFlyingSymbols(positions, 3);
 		} else if (positions[0] === positions[1] || positions[1] === positions[2]) {
 			winAmount = betAmount * 2;
 			balance += winAmount;
@@ -136,39 +131,15 @@
 	});
 </script>
 
-<div class="mb-4 flex h-full w-full flex-col md:mb-8">
-	{#if mounted}
-		<div
-			class="relative flex h-full w-full flex-col"
-			in:scale={{ duration: 300, start: 0.5 }}
-			out:scale={{ duration: 300, start: 0.1 }}
-		>
-			<div class="relative max-h-[400px] flex-1">
-				<div class="absolute inset-0">
-					<Canvas>
-						<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
-					</Canvas>
-				</div>
-			</div>
-		</div>
-		<button
-			in:scale={{ duration: 300 }}
-			out:scale={{ duration: 300 }}
-			onclick={spin}
-			disabled={spinning || balance < betAmount}
-			class="btn-block btn from-primary to-secondary transition-position no-animation z-10 mx-auto mb-4
-				flex max-w-[95%] rounded-full bg-gradient-to-r py-4
-				font-bold
-				text-neutral-100 shadow-[0_0_15px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)]
-				hover:text-white hover:shadow-[0_0_25px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)] active:scale-[0.98]
-				active:shadow-inner disabled:cursor-not-allowed
-				disabled:opacity-50 md:w-[400px]"
-		>
-			{spinning ? 'Spinning...' : `PULL`}
-		</button>
-	{:else}
-		<div class="flex flex-1 items-center justify-center">
-			<span class="loading loading-lg loading-dots text-primary"></span>
-		</div>
-	{/if}
-</div>
+{#if mounted}
+	<div
+		class="flex h-[300px] w-[calc(100%-0.5rem)] flex-col gap-4"
+		style:view-transition-name="page-content"
+	>
+		<Canvas>
+			<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
+		</Canvas>
+
+		<ControlPanel />
+	</div>
+{/if}

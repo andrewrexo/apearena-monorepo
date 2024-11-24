@@ -7,6 +7,8 @@
 	import gameClient from '$lib/game/client';
 	import { defaultRoom } from '$lib/game/config';
 	import { onMount } from 'svelte';
+	import { scale } from 'svelte/transition';
+	import { onNavigate } from '$app/navigation';
 
 	let { children } = $props();
 
@@ -17,24 +19,92 @@
 
 		gameClient.join(defaultRoom);
 	});
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 </script>
 
 <main
 	class="from-primary/50 to-secondary/10 via-secondary/10 min-h-screen overflow-x-hidden bg-gradient-to-br"
 >
-	<Particles />
 	<div class="flex min-h-screen flex-col overflow-hidden p-4">
 		<div class="flex flex-col">
 			<Marquee />
 			<ThemeControl />
 		</div>
 
-		<div class="flex flex-1 items-center justify-center">
-			<div class="h-[min(380px,90vh)] w-full max-w-4xl md:h-[min(450px,90vh)]">
-				{@render children()}
-			</div>
+		<div class="flex w-full flex-1 flex-col md:h-[min(300px,90vh)]">
+			{@render children()}
 		</div>
 
 		<Stats />
 	</div>
 </main>
+
+<style>
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
+
+	/* Page content transitions */
+	::view-transition-old(page-content) {
+		animation:
+			150ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+			300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	}
+
+	::view-transition-new(page-content) {
+		animation:
+			150ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+			300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+	}
+
+	@keyframes morph-to-pull {
+		0% {
+			transform: scale(1);
+			width: 100%;
+			max-width: 100%;
+			border-radius: 12px;
+		}
+		50% {
+			transform: scale(0.8);
+			width: 200px;
+			max-width: 95%;
+			border-radius: 50px;
+		}
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes fade-out {
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes slide-from-right {
+		from {
+			transform: translateX(30px);
+		}
+	}
+
+	@keyframes slide-to-left {
+		to {
+			transform: translateX(-30px);
+		}
+	}
+</style>

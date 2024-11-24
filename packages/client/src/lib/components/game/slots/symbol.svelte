@@ -3,15 +3,9 @@
 	import theme from '$lib/state/theme.svelte';
 
 	let { symbol } = $props();
-</script>
 
-<HTML
-	transform
-	occlude={false}
-	castShadow
-	receiveShadow
-	center
-	style="
+	// Pre-compute styles to reduce runtime calculations
+	const style = `
 		width: 60px;
 		height: 60px;
 		display: flex;
@@ -20,40 +14,18 @@
 		font-size: 38px;
 		border-radius: 6px;
 		font-weight: 700;
-		background: linear-gradient(
-      135deg,
-      {theme.colors.primaryOpaque} 0%,
-      {theme.colors.primary} 100%
-    );
-    overflow: hidden;
-    position: relative;
-  "
->
-	<div
-		style="
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,0.4),
-      transparent
-    );
-    transform: translateX(-100%);
-    animation: shimmer 2s infinite;
-  "
-	></div>
-	<span
-		style="
-									position: relative;
-									z-index: 1;
-									font-weight: bold;
-									animation: bounce 0.5s ease-out;
-								"
-	>
-		{symbol}
-	</span>
+		overflow: hidden;
+		position: relative;
+		background: linear-gradient(135deg, oklch(var(--s)) 0%, oklch(var(--p)) 100%);
+	`;
+
+	const spanStyle = `
+		position: relative;
+		z-index: 1;
+		font-weight: bold;
+	`;
+</script>
+
+<HTML transform occlude={false} castShadow={false} receiveShadow={false} center {style} class="">
+	<span style={spanStyle}>{symbol}</span>
 </HTML>
