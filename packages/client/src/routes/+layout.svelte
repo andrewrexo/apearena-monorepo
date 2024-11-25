@@ -7,18 +7,23 @@
 	import gameClient from '$lib/game/client';
 	import { defaultRoom } from '$lib/game/config';
 	import { onMount } from 'svelte';
-	import { scale } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 	import { onNavigate } from '$app/navigation';
 	import { themeList } from '$lib/theme';
 	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 	import Bar from '$lib/components/nav/bar.svelte';
+	import Socials from '$lib/components/socials.svelte';
 
 	let { children } = $props();
+
+	let mounted = $state(false);
 
 	onMount(() => {
 		if (gameClient.room) {
 			return;
 		}
+
+		mounted = true;
 
 		gameClient.join(defaultRoom);
 	});
@@ -56,6 +61,22 @@
 		</div>
 
 		<Stats />
+		<div
+			class="bg-base-300/40 mt-4 flex min-h-[60px] w-full rounded-xl transition-opacity duration-200"
+			class:opacity-0={!mounted}
+			class:opacity-100={mounted}
+		>
+			{#if mounted}
+				<div class="font-pixel flex w-full items-center justify-between gap-2 p-2 px-6">
+					<span class="w-[400px] text-sm" in:fly={{ y: 10, duration: 500 }}>
+						join us, your bananas await</span
+					>
+					<div in:fly={{ y: 20 }} class="-mt-2">
+						<Socials />
+					</div>
+				</div>
+			{/if}
+		</div>
 	</div>
 </main>
 

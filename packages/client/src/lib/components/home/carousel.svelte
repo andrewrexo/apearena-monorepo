@@ -16,7 +16,7 @@
 	}
 </script>
 
-<button
+<!-- <button
 	class="carousel-button top-[-26%] z-50"
 	aria-label="Scroll left"
 	onclick={() => scroll('left')}
@@ -30,7 +30,7 @@
 	onclick={() => scroll('right')}
 >
 	<MaterialSymbolsArrowRightAlt class="h-6 w-6" />
-</button>
+</button> -->
 
 <div
 	bind:this={carouselContainer}

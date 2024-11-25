@@ -16,11 +16,11 @@
 </script>
 
 <section
-	class="flex flex-col items-center justify-end py-4"
+	class="mb-2 flex flex-col items-center justify-end"
 	style:view-transition-name="page-content"
 	in:scale={{ start: 1.25 }}
 >
-	<figure>
+	<figure class="transition-all duration-200 md:-mt-6">
 		<img src="/images/logo.webp" alt="ape arena" class="max-h-[250px] w-auto object-cover" />
 	</figure>
 </section>

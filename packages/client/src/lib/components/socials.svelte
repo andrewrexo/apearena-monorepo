@@ -18,9 +18,9 @@
 
 <style lang="postcss">
 	a {
-		font-size: 2rem;
-		width: 2rem;
-		height: 2rem;
+		font-size: 1.75rem;
+		width: 1.75rem;
+		height: 1.75rem;
 		@apply transition-all duration-300 hover:scale-110 hover:shadow-lg;
 	}
 </style>
