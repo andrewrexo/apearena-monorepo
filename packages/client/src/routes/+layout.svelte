@@ -13,30 +13,20 @@
 	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 	import Bar from '$lib/components/nav/bar.svelte';
 	import Socials from '$lib/components/socials.svelte';
+	import { statsState } from '$lib/state/stats.svelte';
 
 	let { children } = $props();
 
 	let mounted = $state(false);
 
 	onMount(() => {
+		mounted = true;
+
 		if (gameClient.room) {
 			return;
 		}
 
-		mounted = true;
-
 		gameClient.join(defaultRoom);
-	});
-
-	onMount(() => {
-		const savedTheme = localStorage.getItem('theme');
-
-		if (savedTheme && themeList.includes(savedTheme)) {
-			theme.currentTheme = savedTheme;
-			theme.updateThemeColors();
-		} else if (!savedTheme) {
-			localStorage.setItem('theme', defaultTheme);
-		}
 	});
 
 	onNavigate((navigation) => {
@@ -54,28 +44,22 @@
 <main
 	class="from-primary/50 to-secondary/10 via-secondary/10 min-h-screen overflow-x-hidden bg-gradient-to-br"
 >
-	<div class="flex min-h-screen flex-col overflow-hidden p-4">
+	<Particles />
+	<div class="flex min-h-screen flex-col space-y-2 overflow-hidden p-4">
 		<Bar />
-		<div class="mx-auto flex w-full flex-1 flex-col">
+		<ThemeControl />
+		<div class="flex w-full flex-1 flex-col">
 			{@render children()}
 		</div>
 
-		<Stats />
-		<div
-			class="bg-base-300/40 mt-4 flex min-h-[60px] w-full rounded-xl transition-opacity duration-200"
-			class:opacity-0={!mounted}
-			class:opacity-100={mounted}
-		>
-			{#if mounted}
-				<div class="font-pixel flex w-full items-center justify-between gap-2 p-2 px-6">
-					<span class="w-[400px] text-sm" in:fly={{ y: 10, duration: 500 }}>
-						join us, your bananas await</span
-					>
-					<div in:fly={{ y: 20 }} class="-mt-2">
-						<Socials />
-					</div>
-				</div>
-			{/if}
+		<div class="relative h-[60px] rounded-xl">
+			<div
+				class="absolute bottom-0 right-1/2 translate-x-1/2 px-4
+				py-2 transition-all duration-500 ease-in-out
+				lg:right-0 lg:-translate-x-0"
+			>
+				<Socials />
+			</div>
 		</div>
 	</div>
 </main>

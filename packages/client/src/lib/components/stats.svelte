@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { formatCurrency, formatPercent } from '$lib/formatters';
+	import { formatCurrency } from '$lib/formatters';
 	import { statsState } from '$lib/state/stats.svelte';
 	import { fade } from 'svelte/transition';
-	import Chat from './chat.svelte';
+
 	let totalWagered = $state(420000);
-	let winRate = $state(0.495);
 	let last7DaysWagered = $state(17259);
 </script>
 
@@ -12,33 +11,12 @@
 	<div
 		transition:fade|local={{ duration: 150 }}
 		class="bg-base-300/20 absolute mt-[2px] h-6 w-[100px] animate-pulse rounded"
-	></div>
+	/>
 {/snippet}
 
-<div
-	class="grid grid-cols-1 gap-4 rounded-xl bg-opacity-40 backdrop-blur-sm md:grid-cols-[240px_1fr] md:px-0"
->
-	<div
-		class="bg-base-300 order-2 flex flex-col-reverse justify-between rounded-lg bg-opacity-30 md:order-1"
-	>
-		<div class="stat">
-			<div class="stat-title">Connected players</div>
-			<div class="stat-value">
-				{#if statsState.connected}
-					<div transition:fade|local={{ duration: 150 }} class="flex items-center gap-2">
-						<span class="badge badge-xs bg-success/70 mb-1 rounded-full"></span>
-						{statsState.connected}
-					</div>
-				{:else}
-					{@render notConnectedStats()}
-				{/if}
-			</div>
-			<div class="stat-desc">
-				players online as of {new Date().toLocaleTimeString()}
-			</div>
-		</div>
-
-		<div class="stat">
+<div class="stats-container">
+	<div class="stat-grid">
+		<div class="stat glass">
 			<div class="stat-title">Total wagered ($)</div>
 			<div class="stat-value">
 				{#if statsState.connected}
@@ -49,44 +27,65 @@
 					{@render notConnectedStats()}
 				{/if}
 			</div>
-			<div class="stat-desc">
-				↗︎ {formatCurrency(last7DaysWagered)} in last 7 days
-			</div>
+			<div class="stat-desc">↗︎ {formatCurrency(last7DaysWagered)} in last 7 days</div>
 		</div>
 
-		<div class="stat">
-			<div class="stat-title">7-day win percentage</div>
-			<div class="stat-value min-h-10">
+		<div class="stat glass">
+			<div class="stat-title">Active Players</div>
+			<div class="stat-value">
 				{#if statsState.connected}
-					<div transition:fade|local={{ duration: 150 }}>
-						{winRate.toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 1 })}
+					<div transition:fade|local={{ duration: 150 }} class="flex items-center gap-2">
+						<span class="pulse-dot" />
+						{statsState.connected}
 					</div>
 				{:else}
 					{@render notConnectedStats()}
 				{/if}
 			</div>
-			<div class="stat-desc">↘︎ 0.12% since last 7 days</div>
+			<div class="stat-desc">players online as of {new Date().toLocaleTimeString()}</div>
 		</div>
-	</div>
-	<div class="order-1 flex w-full flex-col-reverse p-0 md:order-2 md:flex-col">
-		<Chat />
 	</div>
 </div>
 
 <style lang="postcss">
+	@import 'tailwindcss/theme' theme(reference);
+
+	.stats-container {
+		@apply mx-auto w-full max-w-xl px-4;
+	}
+
+	.stat-grid {
+		@apply grid grid-cols-1 gap-4 md:grid-cols-2;
+	}
+
 	.stat {
-		@apply p-4 md:py-2;
+		@apply rounded-xl border border-white/10 p-6 backdrop-blur-md transition-all duration-300 hover:border-white/20;
 	}
 
 	.stat-title {
-		@apply text-sm;
+		@apply text-sm text-white/70;
 	}
 
 	.stat-value {
-		@apply font-pixel min-h-7 text-xl;
+		@apply font-pixel my-2 min-h-7 text-2xl md:text-3xl;
 	}
 
 	.stat-desc {
-		@apply text-xs;
+		@apply text-xs text-white/50;
+	}
+
+	.pulse-dot {
+		@apply bg-success h-2 w-2 rounded-full;
+		animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.5;
+		}
 	}
 </style>

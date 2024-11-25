@@ -35,9 +35,11 @@
 	});
 </script>
 
-<div class="flex h-[260px] w-full flex-col overflow-hidden transition-all duration-300">
+<div class="flex h-[230px] w-full flex-col overflow-hidden transition-all duration-300">
 	<div
-		class="border-tl-lg border-tr-lg bg-base-300 h-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg bg-opacity-30 p-2 px-4"
+		class="border-tl-lg b
+    
+    order-tr-lg bg-base-300 h-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg bg-opacity-30 px-4"
 		bind:this={chatContainer}
 	>
 		{#each globalChatState.messages as message, index (`${message.sessionId}-${message.timestamp}-${index}`)}

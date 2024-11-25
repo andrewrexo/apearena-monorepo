@@ -2,25 +2,30 @@
 	import LogosTelegram from '~icons/logos/telegram';
 	import SkillIconsDiscord from '~icons/skill-icons/discord';
 	import SkillIconsTwitter from '~icons/skill-icons/twitter';
+	import SimpleIconsCoinmarketcap from '~icons/simple-icons/coinmarketcap';
 </script>
 
-<div class="z-10 flex gap-4">
-	<a href="https://x.com/apearena" target="_blank" class="h-8 w-8">
-		<SkillIconsTwitter />
+<div class="z-10 flex gap-4 lg:gap-4">
+	<a href="https://x.com/apearena" target="_blank">
+		<SkillIconsTwitter width="2rem" height="2rem" />
 	</a>
-	<a href="https://t.me/apearena" target="_blank" class="h-8 w-8">
-		<LogosTelegram />
+	<a href="https://t.me/apearena" target="_blank">
+		<LogosTelegram width="2rem" height="2rem" />
 	</a>
-	<a href="https://discord.gg/apearena" target="_blank" class="h-8 w-8">
-		<SkillIconsDiscord />
+	<a href="https://discord.gg/apearena" target="_blank">
+		<SkillIconsDiscord width="2rem" height="2rem" />
+	</a>
+	<a
+		href="https://coinmarketcap.com/currencies/ape-arena/"
+		target="_blank"
+		class="text-primary -ml-0.5 h-10 w-10"
+	>
+		<SimpleIconsCoinmarketcap width="2rem" height="2rem" />
 	</a>
 </div>
 
 <style lang="postcss">
 	a {
-		font-size: 1.75rem;
-		width: 1.75rem;
-		height: 1.75rem;
 		@apply transition-all duration-300 hover:scale-110 hover:shadow-lg;
 	}
 </style>

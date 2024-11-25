@@ -1,6 +1,7 @@
 <script lang="ts">
 	import GameIconsHamburgerMenu from '~icons/game-icons/hamburger-menu';
 	import MdiWalletPlus from '~icons/mdi/wallet-plus';
+	import ThemeControl from '../theme-control.svelte';
 
 	let scrollY = $state(0);
 	let isScrolled = $derived(scrollY > 0);
@@ -23,13 +24,16 @@
 	<button class="btn md:btn-md btn-sm btn-ghost border-none transition-all duration-200">
 		<GameIconsHamburgerMenu />
 	</button>
-	<button
-		class="btn md:btn-md btn-sm btn-ghost border-none transition-all duration-200"
-		class:btn-neutral={isScrolled}
-	>
-		<span class="">Connect </span>
-		<MdiWalletPlus />
-	</button>
+
+	<div>
+		<button
+			class="btn md:btn-md btn-sm btn-ghost border-none transition-all duration-200"
+			class:btn-neutral={isScrolled}
+		>
+			<span class="">Connect </span>
+			<MdiWalletPlus />
+		</button>
+	</div>
 </div>
 
 <!-- Add spacing to prevent content from hiding under the navbar -->
