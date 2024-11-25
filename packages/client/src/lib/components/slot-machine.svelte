@@ -131,18 +131,27 @@
 	});
 </script>
 
-<div class="mx-auto flex h-full max-w-3xl flex-col gap-4">
-	<div class="h-[300px]" style:view-transition-name="page-content">
+<div class="mx-auto flex flex-col gap-0">
+	<!-- Canvas container - reduced height -->
+	<div class="relative h-[30vh]">
 		{#if mounted}
-			<!-- Canvas container -->
-			<div class="h-[300px] md:max-h-[250px]" in:scale={{ start: 0.4 }}>
+			<div
+				class="h-full w-full"
+				in:scale={{ start: 0.4 }}
+				style:view-transition-name="page-content"
+			>
 				<Canvas>
-					<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
+					<SlotMachineScene {reels} {spinning} />
 				</Canvas>
+			</div>
+		{:else}
+			<div class="absolute flex h-full w-full items-center justify-center">
+				<span class="loading loading-spinner loading-lg" out:fly={{ y: -20, duration: 300 }}></span>
 			</div>
 		{/if}
 	</div>
-	<ControlPanel {spin} />
+</div>
 
-	<!-- Control panel -->
+<div class="mt-auto flex-1">
+	<ControlPanel {spin} />
 </div>

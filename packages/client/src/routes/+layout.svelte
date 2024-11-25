@@ -11,6 +11,7 @@
 	import { onNavigate } from '$app/navigation';
 	import { themeList } from '$lib/theme';
 	import theme, { defaultTheme } from '$lib/state/theme.svelte';
+	import Bar from '$lib/components/nav/bar.svelte';
 
 	let { children } = $props();
 
@@ -48,8 +49,8 @@
 <main
 	class="from-primary/50 to-secondary/10 via-secondary/10 min-h-screen overflow-x-hidden bg-gradient-to-br"
 >
-	<Particles />
 	<div class="flex min-h-screen flex-col overflow-hidden p-4">
+		<Bar />
 		<div class="mx-auto flex w-full flex-1 flex-col">
 			{@render children()}
 		</div>

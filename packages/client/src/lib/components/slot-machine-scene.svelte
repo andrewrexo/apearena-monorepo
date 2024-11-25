@@ -27,15 +27,23 @@
 	let multiplierTexts = $state([]);
 	let cameraShakeActive = $state(false);
 
-	let CAMERA_Z = $derived(isMobile ? 5 : 7);
-
-	onMount(() => {
+	// Remove camera spring, we'll use direct positioning
+	function updateCameraPosition() {
 		const mediaQuery = window.matchMedia('(max-width: 768px)');
 		isMobile = mediaQuery.matches;
+	}
 
-		mediaQuery.addEventListener('change', (e) => {
-			isMobile = e.matches;
-		});
+	onMount(() => {
+		updateCameraPosition(); // Initial position
+	});
+
+	const shakeCamera = () => {};
+	// Update scene actions
+	$effect(() => {
+		if (sceneActions) {
+			sceneActions.shakeCamera = shakeCamera;
+			// ... other actions ...
+		}
 	});
 
 	// Memoized initial particle setup
@@ -69,15 +77,6 @@
 		precision: 0.001
 	});
 
-	const cameraPosition = spring(
-		{ x: 0, y: 0, z: CAMERA_Z },
-		{
-			stiffness: 0.3,
-			damping: 0.5,
-			precision: 0.001
-		}
-	);
-
 	let cameraShake = $state({
 		intensity: 0,
 		decay: 0.9,
@@ -105,12 +104,6 @@
 
 			cameraShake.offset = { x: randomX, y: randomY, z: 0 };
 			cameraShake.intensity *= cameraShake.decay;
-
-			cameraPosition.set({
-				x: randomX,
-				y: randomY,
-				z: CAMERA_Z + cameraShake.offset.z
-			});
 
 			if (cameraShake.intensity <= 0.01) {
 				cameraShakeActive = false;
@@ -249,11 +242,6 @@
 		];
 	}
 
-	const shakeCamera = (intensity: number) => {
-		cameraShake.intensity = intensity;
-		cameraShakeActive = true;
-	};
-
 	const spawnMultiplierTrail = (multiplier: number) => {
 		multiplierTrail.active = true;
 		multiplierTrail.points = Array(10)
@@ -272,18 +260,11 @@
 	});
 </script>
 
-<T.PerspectiveCamera
-	makeDefault
-	position={[$cameraPosition.x, $cameraPosition.y, $cameraPosition.z]}
-	fov={50}
-	near={0.1}
-	far={1000}
-/>
+<T.PerspectiveCamera makeDefault position={[0, 0, 6.5]} fov={45} near={0.1} far={1000} />
 
-<T.Group position.y={isMobile ? -1 : -2}>
+<T.Group position.y={-0.5}>
 	<T.Group
-		position.y={2.4}
-		position.z={isMobile ? 0.5 : 0.7}
+		position.y={2}
 		scale={$jackpotScale}
 		rotation.x={$rotationSpring.x}
 		rotation.y={$rotationSpring.y}

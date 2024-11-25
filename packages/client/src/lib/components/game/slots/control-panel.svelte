@@ -2,59 +2,56 @@
 	import { fly } from 'svelte/transition';
 
 	let { spin }: { spin: () => void } = $props();
+
+	let spinning = $state(false);
 	let bet = $state(100);
 	let balance = $state(1000);
-	let favorites = $state([100, 250, 500, 1000]);
+	let favorites = $state([0.01, 0.02, 0.5, 1]);
 	let recentResults = $state([
-		{ amount: 200, win: true },
-		{ amount: 100, win: false },
-		{ amount: 500, win: true }
+		{ amount: 0.01, win: true },
+		{ amount: 0.02, win: false },
+		{ amount: 0.05, win: true }
 	]);
+
+	const handleSpin = () => {
+		spinning = true;
+		spin();
+	};
+
+	$effect(() => {
+		if (spinning) {
+			const timeout = setTimeout(() => {
+				spinning = false;
+			}, 3000);
+
+			return () => clearTimeout(timeout);
+		}
+	});
 </script>
 
 <div
-	class="bg-base-300 z-50 -mt-6 mb-6 flex w-full flex-col gap-2 rounded-lg bg-opacity-30 p-4 md:mb-0"
+	class="bg-base-300 z-50 flex w-full flex-col gap-4 rounded-lg bg-opacity-30 p-4 md:mb-0"
 	in:fly={{ y: 10, duration: 500 }}
 >
-	<div class="flex items-center justify-between">
-		<div class="flex items-center gap-2">
-			<button class="btn btn-circle btn-sm" onclick={() => (bet = Math.max(0, bet - 50))}>-</button>
-			<div class="flex flex-col">
-				<span class="text-xs opacity-70">Bet Amount</span>
-				<span class="text-xl font-bold">{bet}</span>
-			</div>
-			<button class="btn btn-circle btn-sm" onclick={() => (bet = Math.min(balance, bet + 50))}
-				>+</button
-			>
+	<div class="font-pixel flex items-center justify-between">
+		<div class="flex flex-col">
+			<span class="text-xs opacity-70">Bet Amount</span>
+			<span class="text-xl font-bold">{bet}</span>
 		</div>
-
+		<div class=" absolute left-1/2 -translate-x-1/2 text-2xl font-bold uppercase">Slot Mania</div>
 		<div class="flex flex-col items-end">
 			<span class="text-xs opacity-70">Balance</span>
 			<span class="text-xl font-bold">{balance}</span>
 		</div>
 	</div>
 
-	<div class="flex gap-2">
-		{#each favorites as amount}
-			<button
-				class="btn btn-sm flex-1"
-				class:btn-primary={bet === amount}
-				onclick={() => (bet = amount)}
-			>
-				{amount}
-			</button>
-		{/each}
-	</div>
-
-	<div class="flex gap-2 text-xs">
-		{#each recentResults as result}
-			<div class={result.win ? 'text-success' : 'text-error'}>
-				{result.win ? '+' : '-'}{result.amount}
-			</div>
-		{/each}
-	</div>
-
-	<button class="btn btn-primary w-full" onclick={() => spin()}> Spin </button>
+	<button class="btn btn-primary w-full" class:btn-disabled={spinning} onclick={() => handleSpin()}>
+		{#if spinning}
+			Spinning <span class="loading loading-spinner loading-sm"></span>
+		{:else}
+			Spin
+		{/if}
+	</button>
 </div>
 
 <style>
