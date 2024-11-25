@@ -35,9 +35,7 @@
 	});
 </script>
 
-<div
-	class="flex h-[220px] w-full flex-col overflow-hidden transition-all duration-300 md:h-[260px]"
->
+<div class="flex h-[260px] w-full flex-col overflow-hidden transition-all duration-300">
 	<div
 		class="border-tl-lg border-tr-lg bg-base-300 h-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg bg-opacity-30 p-2 px-4"
 		bind:this={chatContainer}

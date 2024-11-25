@@ -16,7 +16,7 @@
 </script>
 
 <section
-	class="flex flex-col items-center justify-center py-4"
+	class="flex min-h-[260px] flex-col items-center justify-end py-4"
 	style:view-transition-name="page-content"
 >
 	<span

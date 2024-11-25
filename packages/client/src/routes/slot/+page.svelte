@@ -2,4 +2,6 @@
 	import SlotMachine from '$lib/components/slot-machine.svelte';
 </script>
 
-<SlotMachine />
+<div class="h-full">
+	<SlotMachine />
+</div>

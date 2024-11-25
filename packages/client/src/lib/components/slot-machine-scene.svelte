@@ -18,15 +18,25 @@
 	const REEL_RADIUS = 0.925;
 	const SYMBOL_COUNT = 5;
 	const POSITION_EPSILON = 0.25;
-	const CAMERA_Z = 8;
 	const PARTICLE_DECAY = 0.99;
 	const SYMBOL_OPACITY_DECAY = 0.98;
 	const TEXT_OPACITY_DECAY = 0.97;
 
+	let isMobile = $state(false);
 	let flyingSymbols = $state([]);
 	let multiplierTexts = $state([]);
 	let cameraShakeActive = $state(false);
-	let windowWidth = $state(0);
+
+	let CAMERA_Z = $derived(isMobile ? 5 : 7);
+
+	onMount(() => {
+		const mediaQuery = window.matchMedia('(max-width: 768px)');
+		isMobile = mediaQuery.matches;
+
+		mediaQuery.addEventListener('change', (e) => {
+			isMobile = e.matches;
+		});
+	});
 
 	// Memoized initial particle setup
 	const createInitialParticles = () =>
@@ -157,13 +167,7 @@
 			showParticles = false;
 		}, 3200);
 
-		windowWidth = window.innerWidth;
-
-		const handleResize = () => (windowWidth = window.innerWidth);
-		window.addEventListener('resize', handleResize, { passive: true });
-
 		return () => {
-			window.removeEventListener('resize', handleResize);
 			clearTimeout(timer);
 		};
 	});
@@ -269,23 +273,24 @@
 </script>
 
 <T.PerspectiveCamera
-	position={[$cameraPosition.x, $cameraPosition.y, $cameraPosition.z]}
 	makeDefault
-	fov={38}
+	position={[$cameraPosition.x, $cameraPosition.y, $cameraPosition.z]}
+	fov={50}
+	near={0.1}
+	far={1000}
 />
 
-<T.Group
-	position.y={1.8}
-	position.z={0.5}
-	scale={$jackpotScale}
-	rotation.x={$rotationSpring.x}
-	rotation.y={$rotationSpring.y}
-	rotation.z={$rotationSpring.z}
->
-	<GameText text="JACKPOT" />
-</T.Group>
-
-<T.Group position.y={-0.5}>
+<T.Group position.y={isMobile ? -1 : -2}>
+	<T.Group
+		position.y={2.4}
+		position.z={isMobile ? 0.5 : 0.7}
+		scale={$jackpotScale}
+		rotation.x={$rotationSpring.x}
+		rotation.y={$rotationSpring.y}
+		rotation.z={$rotationSpring.z}
+	>
+		<GameText text="JACKPOT" />
+	</T.Group>
 	<!-- Update lighting -->
 	<T.Group
 		rotation.x={$rotationSpring.x}

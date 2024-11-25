@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 
+	let { spin }: { spin: () => void } = $props();
 	let bet = $state(100);
 	let balance = $state(1000);
 	let favorites = $state([100, 250, 500, 1000]);
@@ -12,7 +13,7 @@
 </script>
 
 <div
-	class="bg-base-300 z-50 flex w-full flex-col gap-2 rounded-lg bg-opacity-30 p-4"
+	class="bg-base-300 z-50 -mt-6 mb-6 flex w-full flex-col gap-2 rounded-lg bg-opacity-30 p-4 md:mb-0"
 	in:fly={{ y: 10, duration: 500 }}
 >
 	<div class="flex items-center justify-between">
@@ -52,6 +53,8 @@
 			</div>
 		{/each}
 	</div>
+
+	<button class="btn btn-primary w-full" onclick={() => spin()}> Spin </button>
 </div>
 
 <style>

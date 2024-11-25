@@ -131,18 +131,18 @@
 	});
 </script>
 
-<div class="flex min-h-[400px] flex-col gap-4 py-4">
-	{#if mounted}
-		<div
-			class="z-10 flex h-[440px] flex-col gap-4 md:h-[200px]"
-			style:view-transition-name="page-content"
-		>
-			<Canvas>
-				<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
-			</Canvas>
+<div class="mx-auto flex h-full max-w-3xl flex-col gap-4">
+	<div class="h-[300px]" style:view-transition-name="page-content">
+		{#if mounted}
+			<!-- Canvas container -->
+			<div class="h-[300px] md:max-h-[250px]" in:scale={{ start: 0.4 }}>
+				<Canvas>
+					<SlotMachineScene {reels} {spinning} {showParticles} bind:sceneActions />
+				</Canvas>
+			</div>
+		{/if}
+	</div>
+	<ControlPanel {spin} />
 
-			<ControlPanel />
-			<button class="btn btn-primary" onclick={spin}>Spin</button>
-		</div>
-	{/if}
+	<!-- Control panel -->
 </div>

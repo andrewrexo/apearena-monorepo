@@ -50,11 +50,6 @@
 >
 	<Particles />
 	<div class="flex min-h-screen flex-col overflow-hidden p-4">
-		<div class="flex flex-col">
-			<Marquee />
-			<ThemeControl />
-		</div>
-
 		<div class="mx-auto flex w-full flex-1 flex-col">
 			{@render children()}
 		</div>

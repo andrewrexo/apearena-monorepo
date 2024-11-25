@@ -38,7 +38,7 @@
 >
 	{#each games as game, i}
 		<div
-			class="card animate-card bg-base-300 image-full max-h-[160px] min-h-[160px] min-w-[100%] snap-center bg-opacity-30 transition-all duration-300 md:min-w-[calc((100%-2rem)/3)] lg:md:min-w-[calc((100%-2rem)/4)]"
+			class="card animate-card bg-base-300 image-full max-h-[200px] min-h-[160px] min-w-[100%] snap-center bg-opacity-30 transition-all duration-300 md:max-h-[180px] md:min-w-[calc((100%-2rem)/3)] lg:md:min-w-[calc((100%-2rem)/4)]"
 			style="animation-delay: {i * 100}ms"
 		>
 			{#if game.image}
