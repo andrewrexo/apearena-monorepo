@@ -22,7 +22,7 @@
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@types/eslint": "^9.6.0",
 		"autoprefixer": "^10.4.20",
-		"daisyui": "^5.0.0-alpha.39",
+		"daisyui": "^4.12.14",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -40,7 +40,7 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"@tailwindcss/postcss": "^4.0.0-beta.2",
+		"@tailwindcss/postcss": "^0.0.0-development.1",
 		"@tailwindcss/typography": "^0.5.15",
 		"@tailwindcss/vite": "^4.0.0-beta.2",
 		"@threlte/core": "^8.0.0-next.30",
