@@ -1,32 +1,34 @@
+const path = '/src/lib/assets/images';
+
 let games = [
 	{
-		title: 'Slot Mania',
+		title: 'Slot Mania 🎰',
 		description: 'Spin to win with our animated slot machine!',
-		image: '/images/slots.webp',
+		image: `${path}/slots.webp`,
 		link: '/slot',
 		tag: 'Popular',
 		color: 'primary'
 	},
 	{
-		title: 'Crash',
+		title: 'Crash 🚀',
 		description: 'Watch the multiplier rise and cash out before the crash!',
-		image: '/images/crash.webp',
+		image: `${path}/crash.webp`,
 		link: '/slot',
 		tag: 'Hot',
 		color: 'secondary'
 	},
 	{
-		title: 'Pixel Poker',
+		title: 'Pixel Poker 🃏',
 		description: 'Classic poker with a retro twist.',
-		image: '/images/poker.webp',
+		image: `${path}/poker.webp`,
 		link: '/slot',
 		tag: 'New',
 		color: 'accent'
 	},
 	{
-		title: 'Dice Duel',
+		title: 'Dice Duel 🎲',
 		description: 'Fast-paced multiplayer dice battles!',
-		image: '/images/dice.webp',
+		image: `${path}/dice.webp`,
 		link: '/slot',
 		tag: 'Multiplayer',
 		color: 'info'

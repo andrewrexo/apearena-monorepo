@@ -38,10 +38,10 @@
 
 <div class="bg-base-300 relative rounded-xl bg-opacity-30 px-2">
 	<div
-		class="from-base-300/20 absolute left-0 top-0 z-10 h-full w-16 rounded-l-xl bg-gradient-to-r to-transparent"
+		class="from-base-300/20 absolute left-0 top-0 z-10 h-full w-16 rounded-l-xl bg-linear-to-r to-transparent"
 	/>
 	<div
-		class="from-base-300/20 absolute right-0 top-0 z-10 h-full w-16 rounded-r-xl bg-gradient-to-l to-transparent"
+		class="from-base-300/20 absolute right-0 top-0 z-10 h-full w-16 rounded-r-xl bg-linear-to-l to-transparent"
 	/>
 
 	<div class="flex overflow-hidden bg-opacity-50 px-16 py-3">

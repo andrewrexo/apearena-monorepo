@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { images } from '$lib/images';
 	import { onMount } from 'svelte';
 	import PointerIcon from '~icons/material-symbols/arrow-selector-tool-rounded';
 	import FingerTapIcon from '~icons/streamline/one-finger-tap';
@@ -6,9 +7,12 @@
 	let { items }: { items: any[] } = $props();
 
 	let isMobile = $state(typeof window !== 'undefined' && window.innerWidth < 768);
-	let isMounted = $state(false);
 
 	let carouselElement: HTMLElement;
+
+	$effect(() => {
+		console.log(images);
+	});
 
 	const preserveScroll = () => {
 		if (!carouselElement) return;
@@ -17,8 +21,6 @@
 			carouselElement.scrollLeft = scrollLeft;
 		});
 	};
-
-	onMount(() => (isMounted = true));
 </script>
 
 <svelte:window
@@ -34,13 +36,11 @@
 
 {#snippet GameCard({ item, i }: { item: any; i: number })}
 	<div class="card-body p-3 text-sm text-neutral-100">
-		<h3
-			class="btn btn-ghost btn-sm no-animation w-fit cursor-auto justify-start rounded-lg text-left text-neutral-300"
-		>
+		<h3 class="btn btn-sm no-animation w-fit cursor-auto justify-start rounded-lg text-left">
 			{item.title}
 		</h3>
-		<div class="flex-1"></div>
-		<div class="card-actions justify-end">
+
+		<div class="card-actions absolute right-2 bottom-2 justify-end">
 			<a class="btn btn-sm bg-opacity-80" href={item.link}>
 				Play
 				{#if !isMobile}
@@ -56,20 +56,13 @@
 <div class="mt-auto w-full">
 	<section class="hidden gap-2 md:grid md:grid-cols-3 lg:grid-cols-4">
 		{#each items as item, i}
-			<div
-				class="card bg-base-300 h-[140px] shadow-lg transition-all duration-300"
-				style="animation-delay: {i * 100}ms"
-			>
-				{#if item.image}
-					<figure>
-						<img
-							src={item.image}
-							alt={item.title}
-							class="h-full w-full object-cover"
-							loading="eager"
-						/>
-					</figure>
-				{/if}
+			<div class="card bg-base-300/50 h-[140px] overflow-hidden shadow-lg">
+				<enhanced:img
+					src={images[item.image]}
+					alt={item.title}
+					class="h-full w-full object-cover"
+					loading="eager"
+				/>
 				{@render GameCard({ item, i })}
 			</div>
 		{/each}
@@ -77,20 +70,18 @@
 
 	<section
 		bind:this={carouselElement}
-		class="carousel rounded-box w-full space-x-8 shadow-lg md:hidden"
+		class="grid w-full grid-cols-1 gap-4 space-x-8 shadow-lg md:hidden"
 	>
 		{#each items as item, i}
 			<div class="carousel-item w-full" id={`game-${i}`}>
-				<div class="card bg-base-300 h-[180px] w-full">
+				<div class="card bg-base-300/50 h-[180px] w-full overflow-hidden">
 					{#if item.image}
-						<figure>
-							<img
-								src={item.image}
-								alt={item.title}
-								class="h-full w-full object-cover"
-								loading="lazy"
-							/>
-						</figure>
+						<enhanced:img
+							src={images[item.image]}
+							alt={item.title}
+							class="h-full w-full object-cover"
+							loading="eager"
+						/>
 					{/if}
 					{@render GameCard({ item, i })}
 				</div>
@@ -106,7 +97,7 @@
 	.card:before {
 		position: relative;
 		content: '';
-		z-index: 10;
+		z-index: 5;
 		border-radius: var(--rounded-box, 1rem);
 		opacity: 0.75;
 		background-color: var(--fallback-n, oklch(var(--n) / 0.7));
@@ -121,18 +112,13 @@
 		grid-column-start: 1;
 		grid-row-start: 1;
 	}
-	.card > figure img {
-		height: 100%;
-		object-fit: cover;
+	picture {
+		overflow: hidden;
 	}
 	.card > .card-body {
 		position: relative;
-		z-index: 20;
+		z-index: 5;
 		--tw-text-opacity: 1;
 		color: var(--fallback-nc, oklch(var(--nc) / var(--tw-text-opacity)));
-	}
-	.card :where(figure) {
-		overflow: hidden;
-		border-radius: inherit;
 	}
 </style>
