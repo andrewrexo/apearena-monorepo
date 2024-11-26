@@ -11,7 +11,14 @@
 
 <section class="flex w-full flex-col items-center justify-center">
 	<div class="logo-container" class:mounted>
-		<img src="/images/logo.webp" alt="ape arena" class="logo" in:fly={{ y: 0, duration: 600 }} />
+		<enhanced:img
+			src="/static/images/logo.webp"
+			alt="ape arena"
+			class="logo"
+			fetchpriority="high"
+			loading="eager"
+			in:fly={{ y: 0, duration: 600 }}
+		/>
 	</div>
 </section>
 
