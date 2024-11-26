@@ -35,7 +35,7 @@
 />
 
 {#snippet GameCard({ item, i }: { item: any; i: number })}
-	<div class="card-body p-3 text-sm text-neutral-100">
+	<div class="card-body p-3 text-sm">
 		<h3 class="btn btn-sm no-animation w-fit cursor-auto justify-start rounded-lg text-left">
 			{item.title}
 		</h3>
@@ -79,7 +79,7 @@
 						<enhanced:img
 							src={images[item.image]}
 							alt={item.title}
-							class="h-full w-full object-cover"
+							class="h-full w-full object-cover brightness-90"
 							loading="eager"
 						/>
 					{/if}
@@ -99,8 +99,8 @@
 		content: '';
 		z-index: 5;
 		border-radius: var(--rounded-box, 1rem);
-		opacity: 0.75;
-		background-color: var(--fallback-n, oklch(var(--n) / 0.7));
+		opacity: 0.5;
+		background-color: var(--fallback-n, oklch(var(--n) / 0.5));
 	}
 	.card:before,
 	.card > * {
