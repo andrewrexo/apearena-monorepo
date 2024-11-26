@@ -49,7 +49,7 @@
 	class="from-primary/10 to-secondary/20 via-secondary/20 min-h-screen overflow-x-hidden bg-linear-to-br px-4 md:px-10"
 >
 	<div class="flex min-h-screen flex-col space-y-2 p-4">
-		<div class="md:h-[38px]" class:h-0={isHome} class:h-[40px]={!isHome}>
+		<div class="md:h-[38px]" class:h-0={isHome}>
 			<Bar />
 		</div>
 		<div class="mx-auto flex w-full max-w-(--breakpoint-lg) flex-1 flex-col space-y-8">
