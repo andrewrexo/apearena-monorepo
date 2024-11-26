@@ -35,10 +35,10 @@
 	});
 </script>
 
-<div class="flex h-[180px] w-full flex-col overflow-hidden transition-all duration-300">
+<div class="flex h-[180px] min-h-max w-full flex-col overflow-hidden">
 	<div
 		class="border-tl-lg b order-tr-lg
-    bg-base-300 bg-opacity-30 h-full w-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg px-4 pb-4"
+    bg-base-300 bg-opacity-30 h-full w-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg px-4 py-2"
 		bind:this={chatContainer}
 	>
 		{#each globalChatState.messages as message, index (`${message.sessionId}-${message.timestamp}-${index}`)}
@@ -63,7 +63,7 @@
 			class="input input-sm input-primary bg-base-300 bg-opacity-40 flex flex-1 items-center rounded-t-none rounded-b-lg border-none pl-4 text-sm text-neutral-300 ring-transparent !outline-none focus:ring-0"
 		>
 			<input
-				class="w-full"
+				class="font-superPixel w-full text-xs"
 				id="chat-input"
 				type="text"
 				bind:value={chatInput}

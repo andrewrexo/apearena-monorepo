@@ -8,7 +8,7 @@ let games = [
 		color: 'primary'
 	},
 	{
-		title: 'Crypto Crash',
+		title: 'Crash',
 		description: 'Watch the multiplier rise and cash out before the crash!',
 		image: '/images/crash.webp',
 		link: '/slot',
@@ -24,7 +24,7 @@ let games = [
 		color: 'accent'
 	},
 	{
-		title: 'Dice Duels',
+		title: 'Dice Duel',
 		description: 'Fast-paced multiplayer dice battles!',
 		image: '/images/dice.webp',
 		link: '/slot',

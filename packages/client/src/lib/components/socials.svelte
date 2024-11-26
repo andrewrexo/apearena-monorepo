@@ -5,22 +5,22 @@
 	import SimpleIconsCoinmarketcap from '~icons/simple-icons/coinmarketcap';
 </script>
 
-<div class="z-10 flex gap-4 lg:gap-4">
+<div class="z-5 flex w-full justify-center gap-4 sm:justify-start">
 	<a href="https://x.com/apearena" target="_blank">
-		<SkillIconsTwitter width="2rem" height="2rem" />
+		<SkillIconsTwitter width="2.5rem" height="2.5rem" />
 	</a>
 	<a href="https://t.me/apearena" target="_blank">
-		<LogosTelegram width="2rem" height="2rem" />
+		<LogosTelegram width="2.5rem" height="2.5rem" />
 	</a>
 	<a href="https://discord.gg/apearena" target="_blank">
-		<SkillIconsDiscord width="2rem" height="2rem" />
+		<SkillIconsDiscord width="2.5rem" height="2.5rem" />
 	</a>
 	<a
 		href="https://coinmarketcap.com/currencies/ape-arena/"
 		target="_blank"
 		class="text-primary -ml-0.5 h-10 w-10"
 	>
-		<SimpleIconsCoinmarketcap width="2rem" height="2rem" />
+		<SimpleIconsCoinmarketcap width="2.5rem" height="2.5rem" />
 	</a>
 </div>
 

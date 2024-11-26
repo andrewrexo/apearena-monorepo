@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Particles from '$lib/components/particles.svelte';
 	import '../app.css';
 	import gameClient from '$lib/game/client';
 	import { defaultRoom } from '$lib/game/config';
@@ -9,14 +8,13 @@
 	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 	import Bar from '$lib/components/nav/bar.svelte';
 	import Socials from '$lib/components/socials.svelte';
+	import { page } from '$app/stores';
 
 	let { children } = $props();
 
-	let mounted = $state(false);
+	let isHome = $derived($page.url.pathname === '/');
 
 	onMount(() => {
-		mounted = true;
-
 		if (gameClient.room) {
 			return;
 		}
@@ -48,24 +46,14 @@
 </script>
 
 <main
-	class="from-primary/50 to-secondary/10 via-secondary/10 min-h-screen overflow-x-hidden bg-gradient-to-br"
+	class="from-primary/10 to-secondary/20 via-secondary/20 min-h-screen overflow-x-hidden bg-gradient-to-br px-4 md:px-10"
 >
 	<div class="flex min-h-screen flex-col space-y-2 p-4">
-		<div class="h-[40px] md:h-[60px]">
+		<div class="md:h-[38px]" class:h-0={isHome} class:h-[40px]={!isHome}>
 			<Bar />
 		</div>
 		<div class="mx-auto flex w-full max-w-screen-lg flex-1 flex-col space-y-8">
 			{@render children()}
-		</div>
-
-		<div class="relative h-[60px] rounded-xl">
-			<div
-				class="absolute right-1/2 bottom-0 translate-x-1/2 px-4
-				py-2 transition-all duration-500 ease-in-out
-				lg:right-0 lg:-translate-x-0"
-			>
-				<Socials />
-			</div>
 		</div>
 	</div>
 </main>
