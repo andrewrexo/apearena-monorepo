@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { themeIconRecord, displayThemeNames } from '$lib/theme';
+	import MdiPaletteOutline from '~icons/mdi/palette-outline';
 	import Icon from '@iconify/svelte';
 	import { fade, fly } from 'svelte/transition';
 	import theme from '$lib/state/theme.svelte';
+
+	let { isDim = false }: { isDim: boolean } = $props();
 
 	let isOpen = $state(false);
 	let mounted = $state(false);
@@ -39,16 +42,14 @@
 	}
 </script>
 
-<div class="dropdown dropdown-end z-[100000000] min-h-10 self-end pt-2" use:clickOutside>
+<div class="dropdown dropdown-end z-[100000000]" use:clickOutside>
 	<button
-		class="btn btn-sm bg-opacity-50 mr-1 flex items-center gap-2 border-none"
+		class="btn btn-sm bg-opacity-40 mr-1 flex items-center gap-2 border-none"
+		class:bg-opacity-40={isDim}
 		onclick={toggleDropdown}
 		in:fade={{ duration: 300 }}
 	>
-		theme
-		<span class="min-h-3 min-w-3" transition:fly={{ y: -10 }}>
-			<Icon icon="material-symbols:palette" />
-		</span>
+		<MdiPaletteOutline class="h-3 w-3" />
 	</button>
 	<ul
 		class="dropdown-content bg-base-300 rounded-box mt-4 w-52 space-y-2 p-2 shadow-2xl"

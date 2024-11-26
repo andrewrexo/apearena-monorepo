@@ -80,3 +80,9 @@ canvas {
 		background-position: 200% 50%;
 	}
 }
+
+body {
+	overflow-x: hidden;
+	width: 100%;
+	position: relative;
+}
