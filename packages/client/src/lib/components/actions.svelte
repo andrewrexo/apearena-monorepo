@@ -9,15 +9,15 @@
 	});
 </script>
 
-<section class="flex max-h-[240px] w-full flex-col items-center justify-center">
+<section class="flex w-full flex-col items-center justify-center">
 	<div class="logo-container" class:mounted>
-		<img src="/images/logo.webp" alt="ape arena" class="logo" in:fly={{ y: 10, duration: 600 }} />
+		<img src="/images/logo.webp" alt="ape arena" class="logo" in:fly={{ y: 0, duration: 600 }} />
 	</div>
 </section>
 
 <style lang="postcss">
 	.logo-container {
-		@apply transition-all delay-300 duration-700 ease-out;
+		@apply transition-all delay-500 duration-700 ease-out md:-mt-0;
 		transform: translateY(0);
 	}
 
@@ -26,6 +26,6 @@
 	}
 
 	.logo {
-		@apply max-h-[200px] w-auto object-contain;
+		@apply max-h-[220px] w-auto px-3 md:px-0;
 	}
 </style>

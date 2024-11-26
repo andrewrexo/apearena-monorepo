@@ -1,4 +1,4 @@
-<div class="absolute inset-0 opacity-20">
+<div class="pointer-events-none absolute inset-0 opacity-20">
 	{#each Array(50) as _, i}
 		<div
 			class="animate-twinkle absolute h-1 w-1 rounded-full bg-white"

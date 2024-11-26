@@ -48,8 +48,6 @@
 </div>
 
 <style lang="postcss">
-	@import 'tailwindcss/theme' theme(reference);
-
 	.stats-container {
 		@apply mx-auto w-full max-w-xl px-4;
 	}

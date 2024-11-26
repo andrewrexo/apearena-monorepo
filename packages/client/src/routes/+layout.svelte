@@ -1,19 +1,14 @@
 <script lang="ts">
-	import Marquee from '$lib/components/marquee.svelte';
 	import Particles from '$lib/components/particles.svelte';
-	import ThemeControl from '$lib/components/theme-control.svelte';
-	import Stats from '$lib/components/stats.svelte';
 	import '../app.css';
 	import gameClient from '$lib/game/client';
 	import { defaultRoom } from '$lib/game/config';
 	import { onMount } from 'svelte';
-	import { fly, scale } from 'svelte/transition';
 	import { onNavigate } from '$app/navigation';
 	import { themeList } from '$lib/theme';
 	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 	import Bar from '$lib/components/nav/bar.svelte';
 	import Socials from '$lib/components/socials.svelte';
-	import { statsState } from '$lib/state/stats.svelte';
 
 	let { children } = $props();
 
@@ -27,6 +22,17 @@
 		}
 
 		gameClient.join(defaultRoom);
+	});
+
+	onMount(() => {
+		const savedTheme = localStorage.getItem('theme');
+
+		if (savedTheme && themeList.includes(savedTheme)) {
+			theme.currentTheme = savedTheme;
+			theme.updateThemeColors();
+		} else if (!savedTheme) {
+			localStorage.setItem('theme', defaultTheme);
+		}
 	});
 
 	onNavigate((navigation) => {
@@ -46,15 +52,16 @@
 >
 	<Particles />
 	<div class="flex min-h-screen flex-col space-y-2 overflow-hidden p-4">
-		<Bar />
-		<ThemeControl />
-		<div class="flex w-full flex-1 flex-col">
+		<div class="h-[90px] duration-500 ease-in-out md:h-[60px]">
+			<Bar />
+		</div>
+		<div class="mx-auto flex w-full max-w-screen-lg flex-1 flex-col overflow-x-hidden">
 			{@render children()}
 		</div>
 
 		<div class="relative h-[60px] rounded-xl">
 			<div
-				class="absolute bottom-0 right-1/2 translate-x-1/2 px-4
+				class="absolute right-1/2 bottom-0 translate-x-1/2 px-4
 				py-2 transition-all duration-500 ease-in-out
 				lg:right-0 lg:-translate-x-0"
 			>
