@@ -35,7 +35,7 @@
 	});
 </script>
 
-<div class="flex h-[180px] min-h-max w-full flex-col overflow-hidden">
+<div class="flex h-[170px] min-h-max w-full flex-col overflow-hidden">
 	<div
 		class="border-tl-lg border-tr-lg bg-base-100/80 h-full w-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg px-4 py-2"
 		bind:this={chatContainer}
@@ -59,7 +59,7 @@
 	<form class="mt-0 flex w-full gap-1" onsubmit={sendMessage}>
 		<label
 			for="chat-input"
-			class="input input-md input-primary bg-base-300/80 bg-opacity-40 flex min-w-full flex-1 items-center rounded-t-none rounded-b-lg border-none pl-4 text-sm text-neutral-300 ring-transparent outline-hidden! focus:ring-0"
+			class="input input-md input-primary bg-base-300/80 bg-opacity-40 flex min-w-full flex-1 items-center rounded-t-none rounded-b-lg border-none pl-4 text-sm ring-transparent outline-hidden! focus:ring-0"
 		>
 			<input
 				class="w-full text-xs"
