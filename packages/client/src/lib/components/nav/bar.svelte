@@ -13,7 +13,7 @@
 </script>
 
 <div
-	class="nav fixed top-0 right-0 left-0 z-10 flex min-h-[70px] w-full items-center justify-between p-4 px-6 transition-all duration-200 md:hidden md:px-4"
+	class="nav fixed top-0 right-0 left-0 z-10 flex min-h-[60px] w-full items-center justify-between p-4 px-6 transition-all duration-200 md:hidden md:px-4"
 	class:shadow-lg={isScrolled}
 	class:backdrop-blur-sm={isScrolled}
 	class:bg-base-100={isScrolled}
