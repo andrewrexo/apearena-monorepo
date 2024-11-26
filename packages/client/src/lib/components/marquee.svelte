@@ -4,14 +4,16 @@
 		message: string;
 	};
 
-	let news = $state<NewsItem[]>([
+	const defaultNews: NewsItem[] = [
 		{ type: 'win', message: '0x00.. won 1000 coins!' },
-		{ type: 'news', message: 'Welcome to the game, 0x00!' },
-		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'win', message: '0x00.. won 500 coins!' },
-		{ type: 'win', message: '0x00.. won 500 coins!' }
-	]);
+		{ type: 'news', message: 'New player joined the game!' },
+		{ type: 'news', message: 'Next jackpot: 5000 coins' },
+		{ type: 'win', message: '0xAB.. won 2500 coins!' },
+		{ type: 'news', message: 'Daily challenge reset in 1 hour' },
+		{ type: 'win', message: '0xCD.. won 750 coins!' }
+	];
+
+	let news = $state<NewsItem[]>(defaultNews);
 
 	function addWin(player: string, amount: number) {
 		news = [
@@ -34,56 +36,62 @@
 	}
 </script>
 
-<div class="btn btn-sm bg-base-300 min-h-5 border-none bg-opacity-50 px-2 py-2">
-	<div class="relative h-8 overflow-hidden rounded-xl">
-		<div class="marquee-container">
-			<div class="marquee-content">
-				{#each news as item}
-					<span
-						class="mx-4 text-xs font-bold"
-						class:text-primary={item.type === 'win'}
-						class:text-secondary={item.type === 'news'}
-					>
-						{item.message}
-					</span>
-				{/each}
-			</div>
-			<div class="marquee-content" aria-hidden="true">
-				{#each news as item}
-					<span
-						class="mx-4 text-xs font-bold"
-						class:text-success={item.type === 'win'}
-						class:text-primary={item.type === 'news'}
-					>
-						{item.message}
-					</span>
-				{/each}
-			</div>
+<div class="bg-base-300 relative rounded-xl bg-opacity-30 px-2">
+	<div
+		class="from-base-300/20 absolute left-0 top-0 z-10 h-full w-16 rounded-l-xl bg-gradient-to-r to-transparent"
+	/>
+	<div
+		class="from-base-300/20 absolute right-0 top-0 z-10 h-full w-16 rounded-r-xl bg-gradient-to-l to-transparent"
+	/>
+
+	<div class="flex overflow-hidden bg-opacity-50 px-16 py-3">
+		<div class="marquee-content">
+			{#each [...news, ...news, ...news] as item}
+				<span
+					class="mx-2 whitespace-nowrap text-xs font-bold"
+					class:text-primary={item.type === 'win'}
+					class:text-secondary={item.type === 'news'}
+				>
+					{item.message}
+				</span>
+			{/each}
+		</div>
+		<div class="marquee-content" aria-hidden="true">
+			{#each [...news, ...news, ...news] as item}
+				<span
+					class="mx-2 whitespace-nowrap text-xs font-bold"
+					class:text-primary={item.type === 'win'}
+					class:text-secondary={item.type === 'news'}
+				>
+					{item.message}
+				</span>
+			{/each}
 		</div>
 	</div>
 </div>
 
 <style>
-	.marquee-container {
-		display: flex;
-		width: fit-content;
-		transform: translate3d(0, 0, 0);
-		animation: scroll 20s linear infinite;
-		will-change: transform;
-	}
-
 	.marquee-content {
 		display: flex;
-		white-space: nowrap;
-		flex-shrink: 0;
+		animation: scroll 60s linear infinite;
+		will-change: transform;
+
+		backface-visibility: hidden;
 	}
 
 	@keyframes scroll {
-		from {
-			transform: translate3d(0, 0, 0);
+		0% {
+			transform: translateX(-50%);
 		}
-		to {
-			transform: translate3d(-50%, 0, 0);
+		100% {
+			transform: translateX(0%);
+		}
+	}
+
+	/* Pause animation when user prefers reduced motion */
+	@media (prefers-reduced-motion: reduce) {
+		.marquee-content {
+			animation-play-state: paused;
 		}
 	}
 </style>

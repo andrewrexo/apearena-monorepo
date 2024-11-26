@@ -14,9 +14,11 @@
 		"test": "npm run test:unit -- --run"
 	},
 	"devDependencies": {
+		"@iconify/json": "^2.2.275",
 		"@iconify/svelte": "^4.0.2",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-vercel": "^5.4.7",
+		"@sveltejs/enhanced-img": "^0.4.1",
 		"@sveltejs/kit": "^2.8.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@types/eslint": "^9.6.0",
@@ -31,16 +33,19 @@
 		"prettier-plugin-tailwindcss": "^0.6.5",
 		"svelte": "^5.2.2",
 		"svelte-check": "^4.0.0",
-		"tailwindcss": "^3.4.9",
+		"tailwindcss": "3.4.9",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.0.0",
+		"unplugin-icons": "^0.20.1",
 		"vite": "^5.0.3",
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"@wagmi/connectors": "^5.3.10",
-		"@wagmi/core": "^2.14.6",
-		"colyseus.js": "^0.15.26",
-		"viem": "2.x"
+		"@tailwindcss/postcss": "^0.0.0-development.1",
+		"@tailwindcss/typography": "^0.5.15",
+		"@tailwindcss/vite": "^4.0.0-beta.2",
+		"@threlte/core": "^8.0.0-next.30",
+		"@threlte/extras": "^9.0.0-next.39",
+		"postprocessing": "^6.36.4"
 	}
 }

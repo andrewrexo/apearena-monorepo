@@ -2,27 +2,67 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-@font-face {
-	font-family: 'PixelFont';
-	src: url('/fonts/pixel-font.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
-
 @layer base {
 	.animated-title {
 		background-image: linear-gradient(
 			-60deg,
 			theme(colors.primary) 0%,
 			theme(colors.primary) 20%,
-			theme(colors.secondary) 40%,
-			theme(colors.secondary) 60%,
+			theme(colors.info) 40%,
+			theme(colors.primary) 60%,
 			theme(colors.primary) 80%,
 			theme(colors.primary) 100%
 		);
 		background-size: 300% auto;
-		animation: shine 4s linear infinite;
+		animation: shine 10s linear infinite;
 	}
+
+	@keyframes shine {
+		to {
+			background-position: 300% center;
+		}
+	}
+
+	@keyframes vibrate {
+		0% {
+			text-shadow:
+				0 0 0px theme(colors.primary),
+				0 0 2px theme(colors.primary);
+		}
+		100% {
+			text-shadow:
+				0 0 2px theme(colors.primary),
+				0 0 4px theme(colors.primary);
+		}
+	}
+
+	@keyframes bounceTwo {
+		0%,
+		100% {
+			transform: translateY(0);
+			animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+		}
+		25% {
+			transform: translateY(-20px);
+			animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+		}
+		45% {
+			transform: translateY(0);
+			animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+		}
+		70% {
+			transform: translateY(-12px);
+			animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+		}
+		85% {
+			transform: translateY(0);
+		}
+	}
+}
+
+canvas {
+	image-rendering: pixelated;
+	background-color: transparent !important;
 }
 
 @keyframes gradient {
@@ -32,4 +72,10 @@
 	100% {
 		background-position: 200% 50%;
 	}
+}
+
+body {
+	overflow-x: hidden;
+	width: 100%;
+	position: relative;
 }

@@ -1,30 +1,18 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
 	import Actions from '$lib/components/actions.svelte';
-	import Particles from '$lib/components/particles.svelte';
-	import Stats from '$lib/components/stats.svelte';
-	import Marquee from '$lib/components/marquee.svelte';
-	import ThemeControl from '$lib/components/theme-control.svelte';
-
-	import gameClient from '$lib/game/client';
-	import { defaultRoom } from '$lib/game/config';
-
-	onMount(() => {
-		gameClient.join(defaultRoom);
-	});
+	import Chat from '$lib/components/chat.svelte';
+	import Carousel from '$lib/components/home/carousel.svelte';
+	import { games } from '$lib/game/content';
 </script>
 
-<main
-	class="from-primary/50 to-secondary/10 via-secondary/10 relative min-h-screen overflow-hidden bg-gradient-to-br"
->
-	<Particles />
-	<div class="flex h-full min-h-screen w-full flex-col justify-between gap-2 px-6 py-4">
-		<div class="flex flex-col gap-2">
-			<Marquee />
-			<ThemeControl />
-		</div>
-		<Actions />
-		<Stats />
+<Actions />
+<div class="grid grid-cols-1 gap-8">
+	<div class="flex flex-col gap-2">
+		<h1 class="inline-flex items-center gap-2 text-xl text-neutral-300">popular games</h1>
+		<Carousel items={games} />
 	</div>
-</main>
+	<div class="space-y-2">
+		<h1 class="inline-flex items-center gap-2 text-xl text-neutral-300">live chat</h1>
+		<Chat />
+	</div>
+</div>

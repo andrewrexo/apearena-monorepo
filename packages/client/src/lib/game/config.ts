@@ -1,7 +1,7 @@
 const defaultRoom = 'chat';
 
-const serverHost = '5.161.177.38';
+const serverHost = 'tezos.zip';
 const serverPort = 2567;
-const serverUrl = `ws://${serverHost}:${serverPort}`;
+const serverUrl = `wss://${serverHost}/ws`;
 
 export { serverUrl, defaultRoom };
