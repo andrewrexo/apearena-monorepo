@@ -65,13 +65,12 @@
 			class="input input-sm input-primary bg-base-300 bg-opacity-40 flex flex-1 items-center rounded-t-none rounded-b-lg border-none pl-4 text-sm text-neutral-300 ring-transparent !outline-none focus:ring-0"
 		>
 			<input
-				class="placeholder:text-base-content w-full"
+				class="w-full"
 				id="chat-input"
 				type="text"
 				bind:value={chatInput}
-				placeholder="Type a message..."
+				placeholder="say hello... or something"
 			/>
-			<button type="submit" class="btn btn-xs bg-opacity-50">Send</button>
 		</label>
 	</form>
 </div>

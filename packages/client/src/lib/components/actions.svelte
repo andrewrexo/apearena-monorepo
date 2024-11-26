@@ -24,24 +24,8 @@
 			class="animated-title font-pixel ml-2 bg-clip-text text-3xl font-semibold text-transparent"
 			in:fly={{ y: 0, duration: 600 }}
 		>
-			ape arena
+			🦍 ape arena
 		</h1>
 	</div>
 	<Chat />
 </section>
-
-<style lang="postcss">
-	.logo-container {
-		@apply transition-all duration-700 ease-out md:-mt-0;
-		z-index: 100000000;
-		transform: translateY(-10px);
-	}
-
-	.logo-container.mounted {
-		transform: translateY(0px);
-	}
-
-	.logo {
-		@apply max-h-[220px] w-auto md:px-0;
-	}
-</style>
