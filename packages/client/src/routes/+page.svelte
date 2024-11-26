@@ -17,5 +17,4 @@
 		<h1 class="inline-flex items-center gap-2 text-xl">> [live chat]</h1>
 		<Chat />
 	</div>
-	<Marquee />
 </div>

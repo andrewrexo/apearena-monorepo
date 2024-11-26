@@ -22,7 +22,7 @@
 	<div class="flex items-center gap-2">
 		{#if isScrolled}
 			<h1
-				class="font-superPixel animated-title mt-1 inline-flex gap-2 bg-clip-text text-xl font-bold text-transparent"
+				class="animated-title mt-1 inline-flex gap-2 bg-clip-text font-mono text-xl font-bold text-transparent"
 			>
 				ape arena
 			</h1>
