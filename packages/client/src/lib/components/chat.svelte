@@ -50,9 +50,7 @@
 					</span>
 				</div>
 				<div class="chat w-full rounded p-0 text-sm" transition:fly={{ y: -10, duration: 300 }}>
-					<div
-						class="flex w-full flex-wrap items-center pr-1 text-sm text-wrap break-all opacity-90"
-					>
+					<div class="flex w-full flex-wrap items-center pr-1 text-sm text-wrap break-all">
 						{message.content}
 					</div>
 				</div>

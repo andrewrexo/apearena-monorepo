@@ -21,7 +21,9 @@
 >
 	<div class="flex items-center gap-2">
 		{#if isScrolled}
-			<h1 class="font-pixel animated-title bg-clip-text text-xl text-transparent">🦍 ape arena</h1>
+			<h1 class="font-pixel animated-title mt-1 bg-clip-text text-xl text-transparent">
+				🦍 ape arena
+			</h1>
 		{/if}
 	</div>
 	<div>
