@@ -35,24 +35,23 @@
 	});
 </script>
 
-<div class="flex h-[230px] w-full flex-col overflow-hidden transition-all duration-300">
+<div class="flex h-[180px] w-full flex-col overflow-hidden transition-all duration-300">
 	<div
-		class="border-tl-lg b
-    
-    order-tr-lg bg-base-300 h-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg bg-opacity-30 px-4"
+		class="border-tl-lg b order-tr-lg
+    bg-base-300 bg-opacity-30 h-full w-full space-y-2 overflow-y-auto scroll-smooth rounded-t-lg px-4 pb-4"
 		bind:this={chatContainer}
 	>
 		{#each globalChatState.messages as message, index (`${message.sessionId}-${message.timestamp}-${index}`)}
-			<div class="message">
+			<div class="message w-full">
 				<div class="flex items-baseline gap-2 text-xs">
 					<span class="font-medium">{message.sessionId}</span>
 					<span class="text-xs text-neutral-500">
 						{new Date(message.timestamp).toLocaleTimeString()}
 					</span>
 				</div>
-				<div class="chat rounded p-0 text-sm" transition:fly={{ y: -10, duration: 300 }}>
+				<div class="chat w-full rounded p-0 text-sm" transition:fly={{ y: -10, duration: 300 }}>
 					<div
-						class="flex w-[calc(100dvw-4.5rem)] items-center break-all pr-1 text-sm opacity-90 md:w-[calc(100dvw-20rem)]"
+						class="flex w-full flex-wrap items-center pr-1 text-sm text-wrap break-all opacity-90"
 					>
 						{message.content}
 					</div>
@@ -63,7 +62,7 @@
 	<form class="mt-0 flex w-full gap-1" onsubmit={sendMessage}>
 		<label
 			for="chat-input"
-			class="input input-md input-primary bg-base-300 flex flex-1 items-center rounded-b-lg rounded-t-none border-none bg-opacity-40 px-4 text-sm text-neutral-300 !outline-none ring-transparent focus:ring-0"
+			class="input input-sm input-primary bg-base-300 bg-opacity-40 flex flex-1 items-center rounded-t-none rounded-b-lg border-none pl-4 text-sm text-neutral-300 ring-transparent !outline-none focus:ring-0"
 		>
 			<input
 				class="placeholder:text-base-content w-full"
@@ -72,7 +71,7 @@
 				bind:value={chatInput}
 				placeholder="Type a message..."
 			/>
-			<button type="submit" class="btn btn-sm bg-opacity-50">Send</button>
+			<button type="submit" class="btn btn-xs bg-opacity-50">Send</button>
 		</label>
 	</form>
 </div>

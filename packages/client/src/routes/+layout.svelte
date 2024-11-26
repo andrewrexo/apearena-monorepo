@@ -51,11 +51,11 @@
 	class="from-primary/50 to-secondary/10 via-secondary/10 min-h-screen overflow-x-hidden bg-gradient-to-br"
 >
 	<Particles />
-	<div class="flex min-h-screen flex-col space-y-2 overflow-hidden p-4">
-		<div class="h-[90px] overflow-x-hidden duration-500 ease-in-out md:h-[60px]">
+	<div class="flex min-h-screen flex-col space-y-2 overflow-hidden p-6">
+		<div class="h-[50px] overflow-x-hidden duration-500 ease-in-out md:h-[60px]">
 			<Bar />
 		</div>
-		<div class="mx-auto flex w-full max-w-screen-lg flex-1 flex-col overflow-x-hidden">
+		<div class="mx-auto flex w-full max-w-screen-lg flex-1 flex-col space-y-8 overflow-x-hidden">
 			{@render children()}
 		</div>
 

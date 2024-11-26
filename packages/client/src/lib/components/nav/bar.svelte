@@ -29,14 +29,11 @@
 			class="btn md:btn-sm btn-md btn-ghost border-none transition-all duration-200"
 			class:btn-neutral={isScrolled}
 		>
-			<span class="">Connect </span>
+			<span class="">[connect] </span>
 			<MdiWalletPlus />
 		</button>
 	</div>
 </div>
 
 <style>
-	.nav {
-		z-index: 100000000;
-	}
 </style>
