@@ -20,7 +20,7 @@
 
 <svelte:window on:scroll={handleScroll} />
 
-<section class="flex w-full gap-6 md:flex-row">
+<section class="flex w-full items-center gap-6 md:flex-row">
 	<div
 		class="logo-container flex w-full flex-col items-center text-center text-sm font-medium md:w-[580px] md:items-start md:text-left"
 		class:mounted
@@ -38,6 +38,9 @@
 			<span class="flex items-center justify-center gap-2 md:justify-start">
 				> automated token buybacks & burns
 			</span>
+			<span class="flex items-center justify-center gap-2 md:justify-start">
+				> holders, users earn trading fees
+			</span>
 		</span>
 		<div class="flex flex-col gap-6 pt-4">
 			<span class="text-sm tracking-wide">
@@ -47,7 +50,7 @@
 		</div>
 	</div>
 	<section class="hidden w-full flex-col gap-2 md:mt-2 md:flex">
-		<h1 class=" font-mono text-lg tracking-tight">[ live chat ]</h1>
+		<h1 class=" font-mono text-lg tracking-tight">> [ live chat ]</h1>
 
 		<Chat />
 	</section>
