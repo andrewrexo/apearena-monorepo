@@ -8,13 +8,13 @@
 
 <Actions />
 
-<div class="grid grid-cols-1 gap-6">
+<div class="grid grid-cols-1 gap-6 font-mono text-lg">
 	<div class="flex flex-col gap-2">
-		<h1 class="inline-flex items-center gap-2 text-xl">> [on-chain games]</h1>
+		<h1 class="inline-flex items-center gap-2">> [ games ]</h1>
 		<Carousel items={games} />
 	</div>
 	<div class="block space-y-2 md:hidden">
-		<h1 class="inline-flex items-center gap-2 text-xl">> [live chat]</h1>
+		<h1 class="inline-flex items-center gap-2">> [live chat]</h1>
 		<Chat />
 	</div>
 </div>

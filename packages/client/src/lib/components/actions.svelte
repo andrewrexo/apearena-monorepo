@@ -22,7 +22,7 @@
 
 <section class="flex w-full items-center gap-6 md:flex-row">
 	<div
-		class="logo-container flex w-full flex-col items-center text-center text-sm font-medium md:w-[580px] md:items-start md:text-left"
+		class="logo-container flex w-full flex-col items-center text-center font-mono text-sm font-medium md:w-[580px] md:items-start md:text-left"
 		class:mounted
 	>
 		<div class="min-h-[60px] md:mt-0">
@@ -33,7 +33,7 @@
 				ape arena
 			</h1>
 		</div>
-		<span class="gap-2 font-mono">
+		<span class="gap-2">
 			> on-chain gaming & gambling
 			<span class="flex items-center justify-center gap-2 md:justify-start">
 				> automated token buybacks & burns

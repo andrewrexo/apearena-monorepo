@@ -52,7 +52,7 @@
 		<div class="md:h-[38px]" class:h-0={isHome}>
 			<Bar />
 		</div>
-		<div class="mx-auto flex w-full max-w-(--breakpoint-lg) flex-1 flex-col space-y-8">
+		<div class="mx-auto w-full max-w-(--breakpoint-lg) flex-1 space-y-8">
 			{@render children()}
 		</div>
 	</div>
