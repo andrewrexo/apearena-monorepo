@@ -1,90 +1,56 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { images } from '$lib/images';
-	import { onMount } from 'svelte';
-	import PointerIcon from '~icons/material-symbols/arrow-selector-tool-rounded';
+	import PointerIcon from '~icons/ph/cursor-click-fill';
 	import FingerTapIcon from '~icons/streamline/one-finger-tap';
 
 	let { items }: { items: any[] } = $props();
 
-	let isMobile = $state(typeof window !== 'undefined' && window.innerWidth < 768);
-
-	let carouselElement: HTMLElement;
-
-	$effect(() => {
-		console.log(images);
-	});
-
-	const preserveScroll = () => {
-		if (!carouselElement) return;
-		const scrollLeft = carouselElement.scrollLeft;
-		requestAnimationFrame(() => {
-			carouselElement.scrollLeft = scrollLeft;
-		});
+	const carouselItemClick = (item: any) => {
+		// todo: navigate to other games
+		setTimeout(() => {
+			goto('/slot');
+		}, 100);
 	};
 </script>
 
-<svelte:window
-	on:resize={() => {
-		if (window.innerWidth < 768 && !isMobile) {
-			isMobile = true;
-		} else if (window.innerWidth >= 768 && isMobile) {
-			isMobile = false;
-		}
-		preserveScroll();
-	}}
-/>
-
 {#snippet GameCard({ item, i }: { item: any; i: number })}
-	<div class="card-body p-3 text-sm">
-		<h3 class="btn btn-sm no-animation w-fit cursor-auto justify-start rounded-lg text-left">
+	<div class="card-body cursor-pointer p-3 text-sm">
+		<h3 class="btn btn-sm w-fit justify-start rounded-lg text-left">
 			{item.title}
 		</h3>
 
 		<div class="card-actions absolute right-2 bottom-2 justify-end">
-			<a class="btn btn-sm bg-opacity-80" href={item.link}>
+			<button class="btn btn-sm bg-opacity-80">
 				Play
-				{#if !isMobile}
-					<PointerIcon class="h-3 w-3" />
-				{:else}
-					<FingerTapIcon class="h-3 w-3" />
-				{/if}
-			</a>
+				<PointerIcon class="hidden h-3 w-3 md:block" />
+				<FingerTapIcon class="h-3 w-3 md:hidden" />
+			</button>
 		</div>
 	</div>
 {/snippet}
 
 <div class="mt-auto w-full">
-	<section class="hidden gap-2 md:grid md:grid-cols-3 lg:grid-cols-4">
+	<section class="grid gap-3 md:grid-cols-3 lg:grid-cols-4">
 		{#each items as item, i}
-			<div class="card bg-base-300/50 h-[140px] overflow-hidden shadow-lg">
+			<div
+				onclick={() => carouselItemClick(item)}
+				onkeydown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						carouselItemClick(item);
+					}
+				}}
+				role="button"
+				tabindex="0"
+				class="card bg-base-300/50 h-[140px] overflow-hidden shadow-lg transition-all duration-200 active:scale-95"
+			>
 				<enhanced:img
 					src={images[item.image]}
 					alt={item.title}
-					class="h-full w-full object-cover"
+					class="h-full w-full overflow-hidden object-cover"
 					loading="eager"
 				/>
 				{@render GameCard({ item, i })}
-			</div>
-		{/each}
-	</section>
-
-	<section
-		bind:this={carouselElement}
-		class="grid w-full grid-cols-1 gap-4 space-x-8 shadow-lg md:hidden"
-	>
-		{#each items as item, i}
-			<div class="carousel-item w-full" id={`game-${i}`}>
-				<div class="card bg-base-300/50 h-[180px] w-full overflow-hidden">
-					{#if item.image}
-						<enhanced:img
-							src={images[item.image]}
-							alt={item.title}
-							class="h-full w-full object-cover brightness-90"
-							loading="eager"
-						/>
-					{/if}
-					{@render GameCard({ item, i })}
-				</div>
 			</div>
 		{/each}
 	</section>
