@@ -42,7 +42,7 @@
 	}
 </script>
 
-<div class="dropdown dropdown-end z-[100000000]" use:clickOutside>
+<div class="dropdown dropdown-end z-100000000" use:clickOutside>
 	<button
 		class="btn btn-sm bg-opacity-40 mr-1 flex items-center gap-2 border-none"
 		class:bg-opacity-40={isDim}

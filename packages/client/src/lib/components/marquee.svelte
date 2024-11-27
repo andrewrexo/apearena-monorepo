@@ -5,12 +5,12 @@
 	};
 
 	const defaultNews: NewsItem[] = [
-		{ type: 'win', message: '0x00.. won 1000 coins!' },
-		{ type: 'news', message: 'New player joined the game!' },
-		{ type: 'news', message: 'Next jackpot: 5000 coins' },
-		{ type: 'win', message: '0xAB.. won 2500 coins!' },
-		{ type: 'news', message: 'Daily challenge reset in 1 hour' },
-		{ type: 'win', message: '0xCD.. won 750 coins!' }
+		{ type: 'win', message: '0x00.. won 1000 coins! 🎉' },
+		{ type: 'news', message: 'New player joined the game 🎉' },
+		{ type: 'news', message: 'Next jackpot: 5000 coins 💰' },
+		{ type: 'win', message: '0xAB.. won 2500 coins! 🎉' },
+		{ type: 'news', message: 'Daily challenge reset in 1 hour 🔄' },
+		{ type: 'win', message: '0xCD.. won 750 coins! 🎉' }
 	];
 
 	let news = $state<NewsItem[]>(defaultNews);
@@ -36,19 +36,19 @@
 	}
 </script>
 
-<div class="bg-base-300 relative rounded-xl bg-opacity-30 px-2">
+<div class="bg-base-100/70 relative rounded-lg px-2">
 	<div
-		class="from-base-300/20 absolute left-0 top-0 z-10 h-full w-16 rounded-l-xl bg-gradient-to-r to-transparent"
+		class="from-base-300/40 absolute top-0 left-0 z-10 h-full w-16 rounded-l-xl bg-linear-to-r to-transparent"
 	/>
 	<div
-		class="from-base-300/20 absolute right-0 top-0 z-10 h-full w-16 rounded-r-xl bg-gradient-to-l to-transparent"
+		class="from-base-300/40 absolute top-0 right-0 z-10 h-full w-16 rounded-r-xl bg-linear-to-l to-transparent"
 	/>
 
-	<div class="flex overflow-hidden bg-opacity-50 px-16 py-3">
+	<div class="bg-opacity-50 flex overflow-hidden px-16 py-3">
 		<div class="marquee-content">
 			{#each [...news, ...news, ...news] as item}
 				<span
-					class="mx-2 whitespace-nowrap text-xs font-bold"
+					class="mx-2 text-xs font-bold whitespace-nowrap"
 					class:text-primary={item.type === 'win'}
 					class:text-secondary={item.type === 'news'}
 				>
@@ -59,7 +59,7 @@
 		<div class="marquee-content" aria-hidden="true">
 			{#each [...news, ...news, ...news] as item}
 				<span
-					class="mx-2 whitespace-nowrap text-xs font-bold"
+					class="mx-2 text-xs font-bold whitespace-nowrap"
 					class:text-primary={item.type === 'win'}
 					class:text-secondary={item.type === 'news'}
 				>

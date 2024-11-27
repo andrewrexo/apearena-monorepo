@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import Socials from './socials.svelte';
+	import Chat from './chat.svelte';
 
 	let mounted = $state(false);
 	let isMobile = $state(false);
@@ -9,7 +10,7 @@
 
 	const handleScroll = (event: UIEvent) => {
 		isMobile = window.innerWidth < 768;
-		isScrolled = isMobile && (event.currentTarget as Window).scrollY > 0;
+		isScrolled = (event.currentTarget as Window).scrollY > 0;
 	};
 
 	onMount(() => {
@@ -19,34 +20,38 @@
 
 <svelte:window on:scroll={handleScroll} />
 
-<section class="flex w-full flex-col justify-center gap-6 md:flex-row">
+<section class="flex w-full items-center gap-6 md:flex-row">
 	<div
-		class="logo-container font-superPixel flex w-full flex-col items-center text-center text-sm font-medium text-neutral-200 md:items-start md:text-left"
+		class="logo-container flex w-full flex-col items-center text-center font-mono text-sm font-medium md:w-[580px] md:items-start md:text-left"
 		class:mounted
 	>
-		<div class="min-h-[48px] md:mt-0">
-			{#if !isScrolled && !isMobile}
-				<h1
-					class="animated-title font-superPixel bg-clip-text text-3xl font-semibold text-transparent md:text-4xl"
-					in:fly={{ y: 0, duration: 600 }}
-					out:fade={{ duration: 100 }}
-				>
-					ape arena
-				</h1>
-			{/if}
+		<div class="min-h-[60px] md:mt-0">
+			<h1
+				class="animated-title bg-clip-text font-mono text-5xl font-extrabold text-transparent transition-none"
+				in:fly={{ y: 20, duration: 300 }}
+			>
+				ape arena
+			</h1>
 		</div>
 		<span class="gap-2">
-			on-chain gaming & gambling
+			> on-chain gaming & gambling
 			<span class="flex items-center justify-center gap-2 md:justify-start">
-				automated token buybacks & burns
+				> automated token buybacks & burns
+			</span>
+			<span class="flex items-center justify-center gap-2 md:justify-start">
+				> holders, users earn trading fees
 			</span>
 		</span>
-		<div class="flex flex-col gap-4 py-4">
-			<span class="font-superPixel text-sm tracking-wide text-neutral-200">
+		<div class="flex flex-col gap-6 pt-4">
+			<span class="text-sm tracking-wide">
 				join our <span class="text-primary">community</span> today
 			</span>
 			<Socials />
 		</div>
 	</div>
-	<section class="hidden w-full md:flex"></section>
+	<section class="hidden w-full flex-col gap-2 md:mt-2 md:flex">
+		<h1 class=" font-mono text-lg tracking-tight">> [ live chat ]</h1>
+
+		<Chat />
+	</section>
 </section>

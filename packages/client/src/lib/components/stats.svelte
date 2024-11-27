@@ -10,7 +10,7 @@
 {#snippet notConnectedStats()}
 	<div
 		transition:fade|local={{ duration: 150 }}
-		class="bg-base-300/20 absolute mt-[2px] h-6 w-[100px] animate-pulse rounded"
+		class="bg-base-300/20 absolute mt-[2px] h-6 w-[100px] animate-pulse rounded-sm"
 	/>
 {/snippet}
 
