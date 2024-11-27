@@ -7,8 +7,8 @@
 	include: button, badge, input, card;
 	exclude: badge;
 	themes:
-		light --default,
-		forest --prefersdark;
+		lofi --default,
+		night --prefersdark;
 }
 
 /*
