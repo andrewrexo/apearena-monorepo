@@ -1,20 +1,21 @@
 <script lang="ts">
 	import '../app.css';
-	import gameClient from '$lib/game/client';
-	import { defaultRoom } from '$lib/game/config';
 	import { onMount } from 'svelte';
 	import { onNavigate } from '$app/navigation';
 	import { themeList } from '$lib/theme';
 	import theme, { defaultTheme } from '$lib/state/theme.svelte';
 	import Bar from '$lib/components/nav/bar.svelte';
-	import Socials from '$lib/components/socials.svelte';
-	import { page } from '$app/stores';
+	import { toast } from '$lib/state/toast.svelte';
+	import { fly } from 'svelte/transition';
+	import Toast from '$lib/components/toast.svelte';
+	import gameClient from '$lib/game/client';
+	import { defaultRoom } from '$lib/game/config';
 
 	let { children } = $props();
 
 	let isHome = false;
 
-	onMount(() => {
+	$effect(() => {
 		if (gameClient.room) {
 			return;
 		}
@@ -48,6 +49,10 @@
 <main
 	class="from-primary/10 to-secondary/20 via-secondary/20 min-h-screen overflow-x-hidden bg-linear-to-br px-4 md:px-10"
 >
+	{#if toast.showToast}
+		<Toast />
+	{/if}
+
 	<div class="flex min-h-screen flex-col space-y-2 p-4">
 		<div class="md:h-[38px]" class:h-0={isHome}>
 			<Bar />
